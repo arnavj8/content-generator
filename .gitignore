@@ -1,0 +1,6 @@
+src.egg-info
+venv
+__pycache__
+.env
+static
+Notebooks/

@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+google-generativeai
+requests
+pillow
+python-dotenv
+pathlib
+Wikipedia-API 
+arxiv 
+newsapi-python
+wikipedia
+markdown
+-e .
