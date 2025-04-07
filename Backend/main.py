@@ -1,7 +1,9 @@
 import os
 import json
+import time
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from pathlib import Path
+from fastapi import FastAPI, HTTPException, Form
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +11,11 @@ from fastapi.staticfiles import StaticFiles
 from Backend.meme import generate_meme_content, add_meme_text,generate_meme_image
 from Backend.blog import fetch_news_newsapi,fetch_arxiv,fetch_wikipedia,generate_blog_with_gemini,duckduckgo_instant_answer,save_json_to_file,generate_image_from_prompt,generate_images_from_blog_json,save_markdown_file,read_markdown_content
 from Backend.images import generate_image_from_topic_and_style
+from Backend.text_generator import generate_video_script, extract_json, save_json
+from Backend.image_generator import generate_images_from_script
+from Backend.audio_generator import generate_audio
+from Backend.music_generator import generate_music, generate_music_prompt
+from Backend.video_generator import create_final_video
 
 # Create FastAPI app
 app = FastAPI()
@@ -34,6 +41,10 @@ class BlogRequest(BaseModel):
     length: str
 
 class ImageRequest(BaseModel):
+    topic: str
+    style: str
+    
+class VideoRequest(BaseModel):
     topic: str
     style: str
     
@@ -132,6 +143,60 @@ async def generate_image_api(request: ImageRequest):
         }
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+current_path = Path(__file__).resolve()
+root_path = current_path.parent.parent
+static_path = current_path.parent /'static'
+output_data_dir = static_path / 'output/video'
+
+
+@app.post("/generate_video/")
+async def generate_video(request : VideoRequest):
+    topic = request.topic
+    style = request.style
+    try:
+        # Generate a unique folder for this request (based on timestamp)
+        unique_folder = output_data_dir / f"video_{int(time.time())}"
+        unique_folder.mkdir(parents=True, exist_ok=True)
+
+        # Create subdirectories within the unique folder
+        images_output_dir = unique_folder / 'output_images'
+        audio_output_dir = unique_folder / 'output_audio'
+        music_output_dir = unique_folder / 'output_music'
+        images_output_dir.mkdir(parents=True, exist_ok=True)
+        audio_output_dir.mkdir(parents=True, exist_ok=True)
+        music_output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generate the video script
+        response_text = generate_video_script(topic,style)
+        video_script = extract_json(response_text)
+
+        # Save the generated script to the unique folder
+        save_json(video_script, unique_folder)
+
+        # Read the saved video script
+        json_file = unique_folder / "video_script.json"
+        with json_file.open("r", encoding="utf-8") as file:
+            script = json.load(file)
+
+        # Generate images, audio, and music
+        generate_images_from_script(script, images_output_dir)
+        generate_audio(script, audio_output_dir)
+
+        # Generate background music
+        music_prompt = generate_music_prompt(script["background_music_prompt"], script["scenes"], script["overall_video_mood"])
+        generate_music(music_prompt, music_output_dir)
+
+        # Create the final video inside the unique folder
+        final_video_path = unique_folder / "final_video.mp4"
+        create_final_video(script, str(images_output_dir), str(audio_output_dir), str(music_output_dir / "background_music.flac"), str(final_video_path))
+
+        # Return the generated video file
+        return FileResponse(final_video_path, media_type="video/mp4")
+
+    except Exception as e:
+        print(f"Error generating video: {e}")
+        return {"error": str(e)}
 
 
 # Run FastAPI app

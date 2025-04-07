@@ -4,3 +4,8 @@ __pycache__
 .env
 static
 Notebooks/
+Backend/main2.py
+Backend/static.zip
+Frontend/index.html
+Frontend/script.js
+Frontend/style.css

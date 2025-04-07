@@ -10,4 +10,15 @@ arxiv
 newsapi-python
 wikipedia
 markdown
+pydub
+gtts
+moviepy
+opencv-python
+numpy
+jinja2
+bs4
+pymongo[srv]
+pdfkit
+python-docx
+reportlab
 -e .
