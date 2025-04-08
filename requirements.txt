@@ -21,4 +21,16 @@ pymongo[srv]
 pdfkit
 python-docx
 reportlab
+
+langchain-google-genai
+chromadb
+gitpython
+python-multipart
+langchain-text-splitters
+jinja2
+faiss-cpu
+
+jwt
+bcrypt
+motor
 -e .

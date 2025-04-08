@@ -1,5 +1,4 @@
 import requests
-
 from dotenv import load_dotenv
 import os
 from pathlib import Path
@@ -7,17 +6,15 @@ import re
 import time
 from gtts import gTTS
 from pydub import AudioSegment
-
+import logging
+from Backend.logger import logging
 
 # Load environment variables
 load_dotenv()
 
 # Get the API key for Hugging Face
 HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-
 API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-
-# Headers with authentication
 headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 def extract_start_time(timestamp):
@@ -31,12 +28,12 @@ def extract_start_time(timestamp):
 def generate_images_from_script(script_json, output_dir):
     """Generate images for each scene based on the script JSON using Hugging Face API."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Loop through each scene and generate an image
+    logging.info(f"Output directory created at {output_dir}")
+
     for scene in script_json.get("scenes", []):
-        timestamp = scene.get("timestamp", "00:00")  # Default timestamp if missing
-        start_time = extract_start_time(timestamp)  # Convert timestamp to seconds
-        
+        timestamp = scene.get("timestamp", "00:00")
+        start_time = extract_start_time(timestamp)
+
         prompt = (
             f"A cinematic scene depicting {scene.get('scene_description', '')}. "
             f"The environment includes {scene.get('character_object_details', '')}. "
@@ -45,58 +42,58 @@ def generate_images_from_script(script_json, output_dir):
             f"Ultra-detailed, realistic, high-quality, professional lighting, dramatic composition."
         )
 
-        output_path = f"{output_dir}/scene_{start_time}.png"  # Save with start_time in seconds
-        
-        # Prepare the request payload
+        output_path = f"{output_dir}/scene_{start_time}.png"
         payload = {"inputs": prompt}
 
         try:
-            response = requests.post(API_URL_SD, headers=headers, json=payload, timeout=60)  # Added timeout
-            
-            # Check if the response is successful
+            logging.info(f"Generating image for scene at {timestamp} with prompt: {prompt[:100]}...")
+            response = requests.post(API_URL_SD, headers=headers, json=payload, timeout=60)
+
             if response.status_code == 200:
                 with open(output_path, "wb") as f:
                     f.write(response.content)
-                print(f"Image saved as {output_path}")
+                logging.info(f"Image saved as {output_path}")
             else:
-                print(f"Error generating image for scene {start_time}: {response.json()}")
+                error_message = response.json()
+                logging.warning(f"Error generating image for scene {start_time}: {error_message}")
+
         except requests.exceptions.RequestException as e:
-            print(f"Request failed for scene {start_time}: {str(e)}")
-    
-    print("All images generated successfully.")
+            logging.error(f"Request failed for scene {start_time}: {str(e)}")
+
+    logging.info("All images generated successfully.")
 
 def generate_audio(script_json, output_dir, language='en', max_retries=3):
     """Generate audio from the voiceover text in the script JSON and save as mp3 files."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+    logging.info(f"Output directory for audio created at {output_dir}")
+
     scenes = script_json.get("scenes", [])
     for i, scene in enumerate(scenes):
-        timestamp = scene.get("timestamp", "00:00")  # Default timestamp if missing
-        start_time = extract_start_time(timestamp)  # Convert timestamp to seconds
+        timestamp = scene.get("timestamp", "00:00")
+        start_time = extract_start_time(timestamp)
         voiceover_text = scene.get("voiceover", "").strip()
         output_path = os.path.join(output_dir, f"scene_{i+1}.mp3")
 
         if not voiceover_text:
-            print(f"Skipping scene {i+1}: No voiceover text provided.")
+            logging.warning(f"Skipping scene {i+1}: No voiceover text provided.")
             continue
 
         for attempt in range(max_retries):
             try:
-                # Generate the TTS (Text-to-Speech) audio file
+                logging.info(f"Generating audio for scene {i+1}, attempt {attempt + 1}")
                 tts = gTTS(voiceover_text, lang=language)
                 tts.save(output_path)
 
-                # Load the audio file and check its validity
                 audio_clip = AudioSegment.from_file(output_path)
-                print(f"Audio saved: {output_path} | Duration: {len(audio_clip) / 1000:.2f}s")
+                logging.info(f"Audio saved: {output_path} | Duration: {len(audio_clip) / 1000:.2f}s")
+                break
 
-                break  # Exit retry loop on success
             except Exception as e:
                 if attempt < max_retries - 1:
-                    print(f"Failed to generate audio for scene {i+1}. Retrying... ({attempt + 1}/{max_retries})")
-                    time.sleep(5)  # Retry after waiting for 5 seconds
+                    logging.warning(f"Failed to generate audio for scene {i+1}. Retrying... ({attempt + 1}/{max_retries})")
+                    time.sleep(5)
                 else:
-                    print(f"Failed after {max_retries} attempts: {e}")
+                    logging.error(f"Failed after {max_retries} attempts for scene {i+1}: {e}")
                     raise
 
-    print("All audio generation tasks completed.")
+    logging.info("All audio generation tasks completed.")

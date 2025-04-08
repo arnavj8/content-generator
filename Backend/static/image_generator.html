@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10"></div>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-10 bg-gray-50 ml-[25%]">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">🖼️ Image Generator</h1>
+
+        <form id="imageForm" class="w-full max-w-2xl space-y-6">
+          <!-- Topic Input -->
+          <div>
+            <label class="block text-lg font-medium text-gray-800 mb-2">Enter the topic:</label>
+            <div class="flex items-center gap-3">
+              <input
+                type="text"
+                id="topicInput"
+                class="flex-1 w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="e.g., A futuristic city at sunset"
+              />
+              <button
+                type="button"
+                id="searchTopicButton"
+                class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+              >
+                🔍
+              </button>
+            </div>
+          </div>
+
+          <!-- Image Style -->
+          <div>
+            <label class="block text-lg font-medium text-gray-800 mb-1">Image Style:</label>
+            <input
+              id="styleInput"
+              type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="e.g., Realistic, Anime, Sketch"
+            />
+          </div>
+
+          <!-- Generate Button -->
+          <button
+            type="button"
+            id="generateButton"
+            class="bg-green-600 text-white px-6 py-3 rounded-lg w-full hover:bg-green-700 transition duration-200 font-semibold text-lg"
+          >
+            🎨 Generate
+          </button>
+
+          <!-- Blue Spinner Loader -->
+          <div id="loader" class="flex justify-center mt-3 hidden">
+            <div class="h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </form>
+
+        <!-- Output Section -->
+        <section id="section8" class="hidden mt-12 border-t pt-10">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">🖼️ Generated Image</h2>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <p id="imageDescription" class="mb-4 text-gray-700 text-lg"></p>
+            <img
+              id="generatedImage"
+              src="https://via.placeholder.com/600x400?text=Generated+Image"
+              alt="Generated Image"
+              class="w-full rounded-lg shadow-lg"
+            />
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- JS -->
+    <script>
+      // Load sidebar and fix highlight
+      fetch('sidebar.html')
+        .then(res => res.text())
+        .then(html => {
+          const sidebarContainer = document.getElementById('sidebar-container');
+          sidebarContainer.innerHTML = html;
+
+          // Clean up sidebar highlight
+          const links = sidebarContainer.querySelectorAll('a');
+          links.forEach(link => {
+            link.classList.remove('bg-blue-100', 'bg-blue-200', 'bg-blue-500', 'text-white', 'ring', 'ring-offset-2');
+            if (link.href === window.location.href) {
+              link.classList.add('font-bold', 'text-blue-600');
+            }
+          });
+        });
+
+        document.addEventListener('click', function (e) {
+    if (e.target.id === 'generateButton') {
+      const topic = document.getElementById("topicInput").value.trim();
+      const style = document.getElementById("styleInput").value.trim();
+      const loader = document.getElementById("loader");
+
+      if (!topic || !style) {
+        alert("Please fill in both topic and style fields.");
+        return;
+      }
+
+      loader.classList.remove("hidden");
+
+      fetch("http://localhost:8000/generate-image/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ topic, style })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.image) {
+            document.getElementById("imageDescription").innerHTML = data.description;
+            document.getElementById("generatedImage").src = `data:image/png;base64,${data.image}`;
+            document.getElementById("section8").classList.remove("hidden");
+            document.getElementById("section8").scrollIntoView({ behavior: "smooth" });
+          } else {
+            alert("Image could not be generated. Try again later.");
+          }
+          loader.classList.add("hidden");
+        })
+        .catch(err => {
+          alert("Failed to generate image. Please check server logs.");
+          loader.classList.add("hidden");
+          console.error(err);
+        });
+    }
+  });
+    </script>
+  </body>
+</html>

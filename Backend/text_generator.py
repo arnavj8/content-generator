@@ -3,28 +3,31 @@ from dotenv import load_dotenv
 import os
 import re
 import json
+import logging
+from Backend.logger import logging
 
+# Load environment variables
 load_dotenv()
 
 # Get the API key for Google Generative AI
 GEN_API_KEY = os.getenv('GEN_API_KEY')
 
 if not GEN_API_KEY:
-    print("GEN_API_KEY not found in environment variables.")
+    logging.error("GEN_API_KEY not found in environment variables.")
 else:
-    print("GEN_API_KEY loaded successfully.")
+    logging.info("GEN_API_KEY loaded successfully.")
 
 try:
-    print("Configuring the generative AI API...")
+    logging.info("Configuring the generative AI API...")
     genai.configure(api_key=GEN_API_KEY)
-    print("Generative AI API configured successfully.")
+    logging.info("Generative AI API configured successfully.")
 except Exception as e:
-    print(f"Error while configuring Generative AI API: {e}")
+    logging.error(f"Error while configuring Generative AI API: {e}")
     raise
 
-def generate_video_script(topic,style):
-    print(f"Generating video script for topic: {topic}")
-    
+def generate_video_script(topic, style):
+    logging.info(f"Generating video script for topic: '{topic}' with style: '{style}'")
+
     prompt = f"""
     You are a professional AI video script generator. Given a video topic and style, generate a detailed script and structured breakdown for an AI-generated video.
 
@@ -45,6 +48,7 @@ def generate_video_script(topic,style):
 
     ## Example Input:
     **Topic:** "{topic}"
+    **Style:** "{style}"
 
     ## Expected Output:
     JSON format with:
@@ -66,42 +70,42 @@ def generate_video_script(topic,style):
       "background_music_prompt": "A cinematic orchestral soundtrack with a dramatic build-up, matching the video's emotional tone."
     }}
     """
-    
+
     try:
-        print("Sending prompt to the generative AI model...")
+        logging.info("Sending prompt to the generative AI model...")
         model = genai.GenerativeModel("gemini-1.5-pro")  
         response = model.generate_content(prompt)
-        print("Successfully received response from the AI model.")
+        logging.info("Successfully received response from the AI model.")
         return response.text
     except Exception as e:
-        print(f"Error during video script generation: {e}")
+        logging.error(f"Error during video script generation: {e}")
         return None
-
 
 def extract_json(text):
     """Extract valid JSON from model output."""
     try:
-        # Find JSON between triple backticks (```)
+        logging.info("Extracting JSON from AI response...")
         matches = re.findall(r"```json\s*(\{.*?\})\s*```|```\s*(\{.*?\})\s*```", text, re.DOTALL)
         if matches:
             json_str = matches[0][0] if matches[0][0] else matches[0][1]  
-            return json.loads(json_str)  # Convert to Python dictionary
+            logging.info("JSON extracted successfully.")
+            return json.loads(json_str)
         else:
-            print("No valid JSON found between triple backticks.")
+            logging.warning("No valid JSON found between triple backticks.")
             return {"error": "No valid JSON found between triple backticks"}
     except json.JSONDecodeError as e:
-        print(f"Invalid JSON format: {e}")
+        logging.error(f"Invalid JSON format: {e}")
         return {"error": f"Invalid JSON format: {e}"}
-
 
 def save_json(video_data, output_dir):
     """Save the video data to a JSON file in the given directory."""
     try:
         json_file_path = os.path.join(output_dir, "video_script.json")
-        
+        logging.info(f"Saving video script to {json_file_path}")
+
         with open(json_file_path, "w", encoding="utf-8") as file:
             json.dump(video_data, file, indent=4, ensure_ascii=False)
-        
-        print(f"Video script saved to {json_file_path}")
+
+        logging.info(f"Video script saved successfully to {json_file_path}")
     except Exception as e:
-        print(f"Error saving video script to file: {e}")
+        logging.error(f"Error saving video script to file: {e}")

@@ -3,15 +3,15 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 import re
-
+import logging
+from Backend.logger import logging
+# Load environment variables
 load_dotenv()
+
 
 # Get the API key for Hugging Face
 HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-
 API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-
-# Headers with authentication
 headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 def extract_start_time(timestamp):
@@ -25,11 +25,11 @@ def extract_start_time(timestamp):
 def generate_images_from_script(script_json, output_dir):
     """Generate images for each scene based on the script JSON using Hugging Face API."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Loop through each scene and generate an image
+    logging.info(f"Output directory created at {output_dir}")
+
     for i, scene in enumerate(script_json.get("scenes", [])):
         timestamp = scene.get("timestamp", "00:00") 
-        start_time = extract_start_time(timestamp)  # Convert timestamp to seconds
+        start_time = extract_start_time(timestamp)
         
         prompt = (
             f"A cinematic scene depicting {scene.get('scene_description', '')}. "
@@ -39,23 +39,22 @@ def generate_images_from_script(script_json, output_dir):
             f"Ultra-detailed, realistic, high-quality, professional lighting, dramatic composition."
         )
 
-        # output_path = f"{output_dir}/scene_{start_time}.png"  # Save with start_time in seconds
-        output_path = f"{output_dir}/scene_{i+1}.png"  # Save with start_time in seconds
-        
-        # Prepare the request payload
+        output_path = f"{output_dir}/scene_{i+1}.png"
         payload = {"inputs": prompt}
 
         try:
-            response = requests.post(API_URL_SD, headers=headers, json=payload, timeout=60)  # Added timeout
-            
-            # Check if the response is successful
+            logging.info(f"Generating image for scene {i+1} with prompt: {prompt[:100]}...")  # Preview first 100 chars
+            response = requests.post(API_URL_SD, headers=headers, json=payload, timeout=60)
+
             if response.status_code == 200:
                 with open(output_path, "wb") as f:
                     f.write(response.content)
-                print(f"Image saved as {output_path}")
+                logging.info(f"Image saved as {output_path}")
             else:
-                print(f"Error generating image for scene {i+1}: {response.json()}")
+                error_message = response.json()
+                logging.warning(f"Error generating image for scene {i+1}: {error_message}")
+
         except requests.exceptions.RequestException as e:
-            print(f"Request failed for scene {i+1}: {str(e)}")
-    
-    print("All images generated successfully.")
+            logging.error(f"Request failed for scene {i+1}: {str(e)}")
+
+    logging.info("All images generated successfully.")

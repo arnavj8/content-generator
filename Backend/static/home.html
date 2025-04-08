@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Content Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+  <!-- Sidebar Placeholder -->
+  <div id="sidebar" class="w-80"></div>
+
+  <!-- Main Content -->
+  <main class="flex-1 bg-gray-200 overflow-y-auto p-10">
+    <div class="max-w-3xl mx-auto space-y-10 bg-white p-8 rounded-xl shadow-lg">
+      <!-- Heading -->
+      <h1 class="text-3xl font-bold text-center text-gray-800">Content Generator</h1>
+
+      <!-- Section 1 -->
+      <section class="space-y-2">
+        <p class="text-xl font-medium text-gray-800">Welcome to the Content Generator</p>
+        <p class="text-gray-700 text-base">bla bla bla</p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="space-y-2">
+        <p class="text-gray-700 text-base">bla bla</p>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="space-y-2">
+        <p class="text-xl font-medium text-gray-800">How to use these sites.</p>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="space-y-2">
+        <p class="text-gray-700 text-base">bla bla</p>
+      </section>
+
+      <!-- Footer -->
+      <section class="pt-6 border-t">
+        <p class="text-center text-gray-600 font-medium">Created by Gaurav and Arnav</p>
+      </section>
+    </div>
+    <a href="meme_generator.html">go to meme</a>
+  </main>
+
+  <!-- Load Sidebar -->
+  <script>
+    fetch("static/sidebar.html")
+      .then((res) => res.text())
+      .then((data) => {
+        document.getElementById("sidebar").innerHTML = data;
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meme Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10 bg-white shadow-lg hidden lg:block"></div>
+
+
+      <!-- Main Content -->
+      <main class="flex-1 p-10 bg-gray-50 ml-[25%]">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">😂 Meme Generator</h1>
+
+        <form id="memeForm" class="w-full max-w-2xl space-y-6" onsubmit="event.preventDefault();">
+          <!-- Meme Topic Input -->
+          <div>
+            <label class="block text-lg font-medium text-gray-800 mb-2" for="memeTopic">Enter Meme Topic:</label>
+            <div class="flex items-center gap-3">
+              <div class="relative flex-1">
+                <input
+                  type="text"
+                  id="memeTopic"
+                  class="w-full p-3 pr-10 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="Type meme topic here"
+                  aria-label="Meme Topic"
+                />
+              </div>
+
+              <!-- Search Button -->
+              <button
+                type="button"
+                id="searchMemeButton"
+                class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                aria-label="Search Meme"
+              >
+                🔍
+              </button>
+            </div>
+          </div>
+
+          <!-- Meme Style -->
+          <div>
+            <label class="block text-lg font-medium text-gray-800 mb-1" for="memeStyle">Meme Style:</label>
+            <input
+              id="memeStyle"
+              type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Describe meme style"
+              aria-label="Meme Style"
+            />
+          </div>
+          <div>
+            <label class="block text-xl font-semibold text-gray-700 mb-2">Choose Language:</label>
+            <select
+              id="memeLanguage"
+              class="w-full p-4 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            >
+              <option value="english">English</option>
+              <option value="hindi">Hindi</option>
+            </select>
+          </div>
+          <!-- Generate Button -->
+          <div class="flex justify-center">
+            <button
+              type="button"
+              id="generateMemeButton"
+              class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-semibold text-lg"
+            >
+              😂 Generate Meme
+            </button>
+          </div>
+        </form>
+
+        <!-- Loader -->
+        <div id="memeLoader" class="hidden flex justify-center items-center mt-10">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-solid"></div>
+          <p class="ml-4 text-gray-600 font-medium">Generating meme...</p>
+        </div>
+
+        <!-- Output Section -->
+        <section id="memeOutput" class="hidden mt-12 border-t pt-10">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">🎉 Generated Meme</h2>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <p id="memeDescription" class="mb-4 text-gray-700 text-lg"></p>
+      
+            <img
+                id="generatedMeme"
+                src="https://via.placeholder.com/600x400?text=Generated+Meme"
+                alt="Generated Meme"
+                class="w-2/3 mx-auto rounded-2xl shadow-md border border-gray-200"/>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      fetch("sidebar.html")
+      .then((res) => res.text())
+      .then((data) => {
+        document.getElementById("sidebar").innerHTML = data;
+      });
+      document.getElementById("generateMemeButton").addEventListener("click", async () => {
+        const topic = document.getElementById("memeTopic").value.trim();
+        const style = document.getElementById("memeStyle").value.trim();
+        const language = document.getElementById("memeLanguage").value.trim();
+        const loader = document.getElementById("memeLoader");
+
+        if (!topic || !style || !language) {
+            alert("Please fill in meme idea, emotion, and language.");
+            return;
+          }
+
+        try {
+          loader.classList.remove("hidden");
+
+          const response = await fetch("/generate_meme", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic, style,language }),
+          });
+
+          const data = await response.json();
+
+          document.getElementById("memeDescription").innerHTML = data.caption;
+          document.getElementById("generatedMeme").src = data.image_url;
+          document.getElementById("memeOutput").classList.remove("hidden");
+        } catch (error) {
+          console.error("Error generating meme:", error);
+          alert("An error occurred while generating the meme.");
+        } finally {
+          loader.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

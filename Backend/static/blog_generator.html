@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="bg-gray-200 min-h-screen">
+  <div class="flex w-full min-h-screen">
+    
+    <!-- Sidebar -->
+    <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-10 bg-gray-50 ml-[25%]">
+      <h1 class="text-3xl font-bold text-gray-800 mb-8">📝 Blog Generator</h1>
+
+      <form id="blogForm" class="space-y-6">
+
+        <!-- Topic Input -->
+        <div>
+          <label class="block text-lg font-medium text-gray-800 mb-2">Enter the topic:</label>
+          <div class="flex gap-3 items-center w-2/3">
+            <input
+              id="topicInput"
+              type="text"
+              class="flex-1 p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="e.g., Artificial Intelligence in Healthcare"
+            />
+            <button
+              type="button"
+              id="searchTopicButton"
+              class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+            >
+              🔍
+            </button>
+          </div>
+        </div>
+
+        <!-- Writing Style -->
+        <div>
+          <label class="block text-lg font-medium text-gray-800 mb-1">Writing Style:</label>
+          <input
+            id="styleInput"
+            type="text"
+            class="w-2/3 p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="e.g., Formal, Conversational, Humorous"
+          />
+        </div>
+
+        <!-- Blog Length -->
+        <div>
+          <label class="block text-lg font-medium text-gray-800 mb-1">Approx Length:</label>
+          <input
+            id="lengthInput"
+            type="text"
+            class="w-2/3 p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="e.g., 300 words, 2 paragraphs"
+          />
+        </div>
+
+        <!-- Generate Button -->
+        <div class="w-2/3">
+          <button
+            type="button"
+            id="generateButton"
+            class="w-full bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 text-base font-semibold transition duration-200">
+            ✍️ Generate Blog
+          </button>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="hidden w-2/3 flex justify-center mt-4 space-x-3 items-center">
+          <div class="w-6 h-6 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <span class="text-blue-600 text-base font-medium">Generating...</span>
+        </div>
+
+        <!-- Output Section -->
+        <section id="section5" class="mt-10 hidden border-t pt-10">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">📰 Generated Blog</h2>
+          <div id="blogOutput" class="bg-white p-6 rounded-lg shadow text-gray-700 text-lg space-y-3 max-w-[800px] mx-auto">
+            <!-- Blog content will be injected here -->
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <!-- Load Sidebar -->
+  <script>
+    fetch('sidebar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('sidebar-container').innerHTML = data;
+      });
+  </script>
+
+  <!-- Blog Generation Script -->
+  <script>
+    document.getElementById("generateButton").addEventListener("click", async () => {
+      const topic = document.getElementById("topicInput").value.trim();
+      const style = document.getElementById("styleInput").value.trim();
+      const length = document.getElementById("lengthInput").value.trim();
+      const outputContainer = document.getElementById("blogOutput");
+      const section = document.getElementById("section5");
+      const loader = document.getElementById("loader");
+
+      if (!topic || !style || !length) {
+        alert("Please fill in all details");
+        return;
+      }
+
+      try {
+        loader.classList.remove("hidden");
+
+        const response = await fetch("/generate_blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, style, length }),
+        });
+
+        const data = await response.text();
+        const rawMarkdown = data; 
+
+        const parsedHTML = marked.parse(rawMarkdown.replace(/\\n/g, '\n')); // Replace literal \n with real newlines
+        outputContainer.innerHTML = parsedHTML;
+
+        // outputContainer.innerHTML = marked.parse(data);
+
+        // // 👉 Inject Tailwind classes to Markdown elements
+        const applyClass = (selector, className) => {
+          outputContainer.querySelectorAll(selector).forEach(el => el.className = className);
+        };
+
+        applyClass("h1", "text-3xl font-bold text-gray-800 mt-6 mb-3");
+        applyClass("h2", "text-2xl font-semibold text-gray-700 mt-5 mb-3");
+        applyClass("h3", "text-xl font-semibold text-gray-600 mt-4 mb-2");
+        applyClass("p", "text-base text-gray-700 mb-4 leading-relaxed");
+        applyClass("ul", "list-disc pl-6 mb-4");
+        applyClass("ol", "list-decimal pl-6 mb-4");
+        applyClass("li", "mb-2");
+        applyClass("img", "max-w-full h-auto my-4 rounded-lg shadow");
+        applyClass("blockquote", "border-l-4 border-blue-500 bg-blue-50 text-blue-900 italic px-4 py-2 mb-4");
+        applyClass("code", "bg-gray-100 text-red-600 px-1 py-0.5 rounded");
+        applyClass("pre", "bg-gray-900 text-white text-sm p-4 rounded overflow-x-auto mb-4");
+
+        section.classList.remove("hidden");
+        section.scrollIntoView({ behavior: "smooth" });
+
+      } catch (error) {
+        console.error("Error generating blog:", error);
+        alert("An error occurred while generating the blog.");
+      } finally {
+        loader.classList.add("hidden");
+      }
+    });
+  </script>
+</body>
+</html>
