@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌈 Image Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white">
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"></div>
+
+      <!-- Main Content -->
+      <main class="flex-1 w-full lg:ml-[25%] px-4 sm:px-10 py-12">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-5xl font-extrabold text-center mb-12 text-gray-800 drop-shadow-md">
+            🖼️ Image Generator
+          </h1>
+
+          <form id="imageForm" class="bg-white/50 backdrop-blur-2xl shadow-2xl border border-gray-200 rounded-3xl px-8 sm:px-12 py-12 space-y-8">
+            <!-- Topic Input -->
+           <div>
+  <label class="block text-xl font-semibold text-gray-700 mb-2">Enter the topic:</label>
+  <div class="flex gap-3 items-center">
+    <input
+      type="text"
+      id="topicInput"
+      class="flex-grow p-4 border border-gray-300 rounded-xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
+      placeholder="e.g., A futuristic city at sunset"
+    />
+    <button
+      type="button"
+      id="searchTopicButton"
+      class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition whitespace-nowrap"
+    >
+      🔍
+    </button>
+  </div>
+</div>
+
+
+            <!-- Image Style -->
+            <div>
+              <label class="block text-xl font-semibold text-gray-700 mb-2">Image Style:</label>
+              <input
+                id="styleInput"
+                type="text"
+                class="w-full p-4 border border-gray-300 rounded-xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
+                placeholder="e.g., Realistic, Anime, Sketch"
+              />
+            </div>
+
+            <!-- Generate Button & Loader -->
+            <div class="flex flex-col items-center gap-4">
+              <button
+  type="button"
+  id="generateButton"
+  class="bg-green-600 text-white px-10 py-4 rounded-2xl hover:bg-green-700 hover:scale-105 transition-all duration-300 font-bold text-lg shadow-lg"
+>
+                🎨 Generate Image
+              </button>
+
+              <!-- Loader Spinner -->
+<div id="loader" class="hidden flex items-center gap-4 mt-2">
+  <div class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  <span class="text-black font-medium text-lg">Generating...</span>
+</div>
+
+            </div>
+          </form>
+
+          <!-- Output Section -->
+          <section id="section8" class="hidden mt-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">✨ Your Generated Image</h2>
+            <div class="bg-white/60 p-8 rounded-3xl shadow-xl max-w-3xl mx-auto backdrop-blur-lg border border-gray-200">
+              <p id="imageDescription" class="mb-6 text-gray-700 text-lg leading-relaxed text-center"></p>
+              <img
+                id="generatedImage"
+                src="https://via.placeholder.com/600x400?text=Generated+Image"
+                alt="Generated Image"
+                class="w-2/3 mx-auto rounded-2xl shadow-lg border border-gray-300"
+              />
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- JS -->
+    <script>
+      // Load sidebar
+      fetch('sidebar.html')
+        .then(res => res.text())
+        .then(html => {
+          const sidebarContainer = document.getElementById('sidebar-container');
+          sidebarContainer.innerHTML = html;
+
+          // Highlight current link
+          const links = sidebarContainer.querySelectorAll('a');
+          links.forEach(link => {
+            link.classList.remove('bg-blue-100', 'bg-blue-200', 'bg-blue-500', 'text-white', 'ring', 'ring-offset-2');
+            if (link.href === window.location.href) {
+              link.classList.add('font-bold', 'text-blue-600');
+            }
+          });
+        });
+
+      // Generate logic
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'generateButton') {
+          const topic = document.getElementById("topicInput").value.trim();
+          const style = document.getElementById("styleInput").value.trim();
+          const loader = document.getElementById("loader");
+
+          if (!topic || !style) {
+            alert("Please fill in both topic and style fields.");
+            return;
+          }
+
+          loader.classList.remove("hidden");
+
+          setTimeout(() => {
+            const description = `Here is an image generated based on the topic <strong>"${topic}"</strong> in <strong>"${style}"</strong> style.`;
+            document.getElementById("imageDescription").innerHTML = description;
+            document.getElementById("section8").classList.remove("hidden");
+            document.getElementById("section8").scrollIntoView({ behavior: "smooth" });
+            loader.classList.add("hidden");
+          }, 1200);
+        }
+      });
+    </script>
+  </body>
+</html>
