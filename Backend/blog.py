@@ -106,20 +106,51 @@ def generate_blog_with_gemini(context, topic, style, length):
         model = genai.GenerativeModel("gemini-1.5-pro")
         logging.info(f"Generating blog with Gemini for topic: {topic}, style: {style}, length: {length}")
 
+        # Correct prompt formatting with JSON escaping
         json_structure = json.dumps({
-            "title": "Blog Title",
-            "tags": ["Keyword1", "Keyword2", "Keyword3", "Keyword4", "Keyword5"],
-            "content": "Full blog content with proper formatting...",
-            "image_prompts": [
-                "A detailed description of an image related to the blog topic.",
-                "Another descriptive prompt for an image relevant to the content."
-            ]
-        }, indent=2)
-
+             "title": "Blog Title",
+             "tags": ["Keyword1", "Keyword2", "Keyword3", "Keyword4", "Keyword5"],
+             "content": "Full blog content with proper formatting, headings, and paragraphs. "
+                        "Include max 2 image links using the markdown format and name should be same as given below:\n\n"
+                        "![Description](blogs/image1.png)\n\n"
+                        "![Another relevant description](blogs/image2.png)\n\n"
+                        "This ensures images are embedded within the blog. and these images will be below prompt only.",
+             "image_prompts": [
+                 "A detailed description of an image related to the blog topic.",
+                 "Another descriptive prompt for an image relevant to the content.",
+                 "A third image prompt that complements the blog visually."
+             ]
+         }, indent=2)  # Properly formatted JSON template
+ 
         prompt = f'''
-        Write a well-structured, engaging, and professional blog on the topic: "{topic} with style {style} and length {length}".
-        The blog must be **suitable for publishing**...
-        '''
+         Write a well-structured, engaging, and professional blog on the topic: "{topic} with style{style} and length {length}".
+         Use the provided context to ensure factual accuracy. If relevant context is missing, generate a factually correct and well-researched blog based on your knowledge.
+         The blog must be **suitable for publishing** and provide **valuable insights** to the reader.
+ 
+         ### **Requirements:**
+         - Maintain a **natural, professional, and engaging tone**.
+         - Structure the content with **clear headings, subheadings, and well-formatted paragraphs**.
+         - Ensure the blog is **informative, easy to read, and logically structured**.
+         - Avoid unnecessary repetition and ensure a smooth flow of ideas.
+         - **Include relevant images within the content** using markdown format (`![Alt Text](image_url)`).
+ 
+         ### **Provided Context:**
+         {context}
+ 
+         ### **Recheck Before Returning the Answer:**
+         - Verify the **title** is relevant, engaging, and reflects the blog content.
+         - Ensure the **tags** are diverse, relevant, and limited to exactly five.
+         - Check that the **content is well-structured, logically organized, and free of factual errors.**
+         - **Confirm all image prompts are properly linked inside the blog content** (using `![Alt Text](image_url)`).
+         - Validate that the **JSON format is strictly followed** without extra text or explanations.
+ 
+         ### **Output Format (JSON):**
+         Return the blog in the exact following JSON format:
+ 
+         ```json
+         {json_structure}
+         ```
+         '''
 
         response = model.generate_content(prompt)
         if response and hasattr(response, "text"):

@@ -184,6 +184,27 @@ async def generate_video(request: VideoRequest):
 #     with open("static/index.html", "r") as f:
 #         return HTMLResponse(content=f.read(), status_code=200)
 
+# @app.post("/api/initialize")
+# async def initialize_kb():
+#     try:
+#         success = kb.initialize()
+#         if success:
+#             logging.info("Knowledge base initialized successfully")
+#             return JSONResponse(content={"success": True, "message": "Knowledge base initialized successfully"})
+#         else:
+#             logging.error("Failed to initialize knowledge base")
+#             return JSONResponse(content={"success": False, "message": "Failed to initialize knowledge base"}, status_code=500)
+#     except Exception as e:
+#         logging.error(f"Error initializing knowledge base: {str(e)}")
+#         return JSONResponse(content={"success": False, "message": str(e)}, status_code=500)
+
+# @app.get("/api/status")
+# async def get_status():
+#     if kb.initialized:
+#         return JSONResponse(content={"status": "complete", "initialized": True})
+#     else:
+#         return JSONResponse(content={"status": "not_started", "initialized": False})
+
 @app.post("/api/initialize")
 async def initialize_kb():
     try:
@@ -200,10 +221,10 @@ async def initialize_kb():
 
 @app.get("/api/status")
 async def get_status():
-    if kb.initialized:
-        return JSONResponse(content={"status": "complete", "initialized": True})
-    else:
-        return JSONResponse(content={"status": "not_started", "initialized": False})
+    return JSONResponse(content={
+        "status": "complete" if kb.initialized else "not_started", 
+        "initialized": kb.initialized
+    })
 
 @app.post("/api/chat")
 async def chat(request: ChatRequest):

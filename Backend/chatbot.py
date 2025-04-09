@@ -1,3 +1,103 @@
+# import os
+# import tempfile
+# import shutil
+# from pathlib import Path
+# import threading
+# import requests
+# import zipfile
+# import io
+# import numpy as np
+# import faiss
+# import google.generativeai as genai
+# from langchain_text_splitters import RecursiveCharacterTextSplitter
+# from langchain_google_genai import GoogleGenerativeAIEmbeddings
+# import logging
+# from Backend.logger import logging
+# from dotenv import load_dotenv
+# load_dotenv()
+# GEMINI_API_KEY = os.getenv("GEN_API_KEY")
+# GITHUB_REPO_URL = os.getenv("GITHUB_REPO_URL")
+# if not GEMINI_API_KEY or not GITHUB_REPO_URL:
+#     raise ValueError("Required environment variables are not set")
+
+# class KnowledgeBase:
+#     def __init__(self):
+#         self.initialized = False
+#         self.repo_path = None
+#         self.embeddings = None
+#         self.index = None
+#         self.metadata = []
+#         self._initialization_lock = threading.Lock()
+#         self._initialization_in_progress = False
+            
+#     def initialize(self):
+#         """Initialize the knowledge base"""
+#         temp_dir = None
+        
+#         # Check if already initialized or initialization in progress
+#         with self._initialization_lock:
+#             if self.initialized:
+#                 logging.info("Knowledge base already initialized")
+#                 return True
+            
+#             if self._initialization_in_progress:
+#                 logging.info("Initialization already in progress")
+#                 return False
+            
+#             self._initialization_in_progress = True
+        
+#         try:
+#             logging.info("Starting initialization...")
+            
+#             # Validate environment variables
+#             if not GITHUB_REPO_URL:
+#                 raise ValueError("GITHUB_REPO_URL not set in environment variables")
+#             if not GEMINI_API_KEY:
+#                 raise ValueError("GEMINI_API_KEY not set in environment variables")
+            
+#             # Configure Gemini
+#             genai.configure(api_key=GEMINI_API_KEY)
+
+#             # Set up embeddings
+#             self.embeddings = GoogleGenerativeAIEmbeddings(
+#                 model="models/embedding-001",
+#                 google_api_key=GEMINI_API_KEY
+#             )
+
+#             # Create temp directory for repo
+#             temp_dir = tempfile.mkdtemp()
+#             self.repo_path = os.path.join(temp_dir, "repo")
+#             os.makedirs(self.repo_path, exist_ok=True)
+
+#             # Download repository
+#             self._download_repo()
+
+#             # Process files
+#             self._process_files()
+
+#             # Mark as initialized
+#             with self._initialization_lock:
+#                 self.initialized = True
+#                 self._initialization_in_progress = False
+            
+#             logging.info("Initialization complete!")
+#             return True
+        
+#         except Exception as e:
+#             logging.error(f"Initialization failed: {str(e)}")
+            
+#             # Cleanup temp directory if it exists
+#             if temp_dir and os.path.exists(temp_dir):
+#                 shutil.rmtree(temp_dir)
+            
+#             # Reset initialization state
+#             with self._initialization_lock:
+#                 self.initialized = False
+#                 self._initialization_in_progress = False
+            
+#             return False
+
+
 import os
 import tempfile
 import shutil
@@ -11,13 +111,13 @@ import google.generativeai as genai
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import logging
+import threading
 from Backend.logger import logging
 from dotenv import load_dotenv
+
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEN_API_KEY")
 GITHUB_REPO_URL = os.getenv("GITHUB_REPO_URL")
-if not GEMINI_API_KEY or not GITHUB_REPO_URL:
-    raise ValueError("Required environment variables are not set")
 
 class KnowledgeBase:
     def __init__(self):
@@ -26,16 +126,34 @@ class KnowledgeBase:
         self.embeddings = None
         self.index = None
         self.metadata = []
+        self._initialization_lock = threading.Lock()
+        self._initialization_in_progress = False
 
     def initialize(self):
         """Initialize the knowledge base"""
         temp_dir = None
+        
+        with self._initialization_lock:
+            if self.initialized:
+                logging.info("Knowledge base already initialized")
+                return True
+            
+            if self._initialization_in_progress:
+                logging.info("Initialization already in progress")
+                return False
+            
+            self._initialization_in_progress = True
+        
         try:
             logging.info("Starting initialization...")
+            
+            # Validate environment variables
             if not GITHUB_REPO_URL:
                 raise ValueError("GITHUB_REPO_URL not set in environment variables")
             if not GEMINI_API_KEY:
                 raise ValueError("GEMINI_API_KEY not set in environment variables")
+            
+            # Configure Gemini
             genai.configure(api_key=GEMINI_API_KEY)
 
             # Set up embeddings
@@ -55,15 +173,29 @@ class KnowledgeBase:
             # Process files
             self._process_files()
 
-            self.initialized = True
-            print("Initialization complete!")
+            # Mark as initialized
+            with self._initialization_lock:
+                self.initialized = True
+                self._initialization_in_progress = False
+            
+            logging.info("Initialization complete!")
             return True
-
+        
         except Exception as e:
-            print(f"Error during initialization: {str(e)}")
+            logging.error(f"Initialization failed: {str(e)}")
+            
+            # Cleanup temp directory if it exists
             if temp_dir and os.path.exists(temp_dir):
                 shutil.rmtree(temp_dir)
+            
+            # Reset initialization state
+            with self._initialization_lock:
+                self.initialized = False
+                self._initialization_in_progress = False
+            
             return False
+
+    # Rest of the methods remain the same as in your previous implementation
 
     def _download_repo(self):
         """Download the GitHub repository"""
@@ -146,7 +278,7 @@ class KnowledgeBase:
 
         ignored_extensions = {
             '.exe', '.bin', '.jpg', '.jpeg', '.png', '.gif', '.mp4',
-            '.mp3', '.zip', '.tar', '.gz', '.pdf', '.pyc'
+            '.mp3', '.zip', '.tar', '.gz', '.pdf', '.pyc', '.ttf'
         }
 
         if file_path.suffix.lower() in ignored_extensions:
@@ -177,20 +309,33 @@ class KnowledgeBase:
             # Generate response with Gemini
             model = genai.GenerativeModel('gemini-1.5-pro')
 
-            prompt = f"""You are a helpful AI assistant for this project. Answer all queries to user based to the project context in confidence. You should:
-                1. If the user's message is a greeting (like "hello", "hi", "hey"), respond with a friendly greeting and offer to help with questions about the code.
-                2. For other questions, use ONLY the context provided below to answer.
-                3. If you don't know or the information isn't in the context, say so honestly.
+            prompt = f"""You are a helpful AI assistant specifically designed for this project's RAG (Retrieval Augmented Generation) chatbot. Your primary goal is to provide accurate and helpful information about the project based on the available context. 
+            
+                Guidelines for responding:
+
+                1. Greeting Handling:
+                - If the user sends a greeting (hello, hi, hey), respond warmly and offer assistance
+                - Mention that you're an AI assistant for the project's code repository
+
+                2. Question Answering:
+                - Use ONLY the provided context to formulate your responses
+                - Be precise and directly address the user's query
+                - If the information is not in the context, clearly state that you don't have enough information
+
+                3. Response Style:
+                - Be friendly and professional
+                - Provide clear and concise answers
+                - If uncertain, admit the limitation honestly
 
                 CONTEXT:
                 {context}
 
-                QUESTION: {user_query}
+                CURRENT QUERY: {user_query}
 
-                Remember:
-                - For greetings, be friendly and welcoming
-                - For technical questions, use ONLY the information from the context
-                - Be clear when information is not available in the context"""
+                Additional Instructions:
+                - Prioritize accuracy over speculation
+                - If asked about your creation, mention you're an AI assistant for the project
+                - Focus on helping users understand the project's code and functionality"""
 
             response = model.generate_content(prompt)
             return response.text if response else "Could not generate response"
@@ -211,4 +356,5 @@ class KnowledgeBase:
             self.metadata = []
         except Exception as e:
             logging.error(f"Error during cleanup: {str(e)}")
+
 
