@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📝 Blog Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f0f0f0, #dcdcdc);
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white"
+  >
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <div
+        id="sidebar-container"
+        class="w-1/4 fixed top-0 left-0 h-full z-10 hidden lg:block"
+      ></div>
+
+      <!-- Main Content -->
+      <main class="flex-1 w-full lg:ml-[25%] px-6 sm:px-12 py-12">
+        <!-- Blog Generator Heading -->
+        <h1
+          class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-10 text-center flex items-center justify-center gap-3"
+        >
+          <span class="text-4xl">📝</span> <span>Blog Generator</span>
+        </h1>
+
+        <div
+          class="max-w-4xl mx-auto bg-white/60 backdrop-blur-2xl border border-white/30 rounded-3xl p-10 shadow-2xl"
+        >
+          <!-- Form Section -->
+          <form id="blogForm" class="space-y-8">
+            <!-- Topic -->
+            <div>
+              <label class="block text-lg font-medium mb-2 text-black"
+                >Enter the topic:</label
+              >
+              <div class="flex gap-3 items-center">
+                <input
+                  id="topicInput"
+                  type="text"
+                  class="flex-1 p-4 rounded-xl bg-white/70 border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                  placeholder="e.g., AI in Healthcare"
+                />
+                <button
+                  type="button"
+                  id="searchTopicButton"
+                  class="px-4 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition"
+                >
+                  🔍
+                </button>
+              </div>
+            </div>
+
+            <!-- Style -->
+            <div>
+              <label class="block text-lg font-medium mb-2 text-black"
+                >Writing Style:</label
+              >
+              <input
+                id="styleInput"
+                type="text"
+                class="w-full p-4 rounded-xl bg-white/70 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                placeholder="e.g., Formal, Humorous"
+              />
+            </div>
+
+            <!-- Length -->
+            <div>
+              <label class="block text-lg font-medium mb-2 text-black"
+                >Approx Length:</label
+              >
+              <input
+                id="lengthInput"
+                type="text"
+                class="w-full p-4 rounded-xl bg-white/70 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
+                placeholder="e.g., 300 words, 2 paragraphs"
+              />
+            </div>
+
+            <!-- Generate Button -->
+            <div class="flex flex-col gap-4 items-center">
+              <button
+                type="button"
+                id="generateButton"
+                class="bg-gradient-to-r from-green-400 via-green-500 to-emerald-600 text-white text-lg px-10 py-4 rounded-2xl font-semibold shadow-lg hover:scale-105 transition-all"
+              >
+                ✍️ Generate Blog
+              </button>
+
+              <!-- Loader -->
+              <div id="loader" class="hidden flex items-center space-x-3">
+                <div
+                  class="w-6 h-6 border-4 border-t-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                ></div>
+                <span class="text-black text-base font-medium"
+                  >Generating...</span
+                >
+              </div>
+            </div>
+          </form>
+
+          <!-- Output Section -->
+          <section id="section5" class="mt-12 hidden">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+              📰 Generated Blog
+            </h2>
+            <div
+              id="blogOutput"
+              class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-gray-800 text-lg space-y-4"
+            >
+              <!-- Blog content will appear here -->
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Sidebar Load Script -->
+    <script>
+      fetch("sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebar = document.getElementById("sidebar-container");
+          sidebar.innerHTML = html;
+        });
+    </script>
+
+    <!-- Blog Generation Script -->
+    <script>
+      document
+        .getElementById("generateButton")
+        .addEventListener("click", function () {
+          const topic = document.getElementById("topicInput").value.trim();
+          const style = document.getElementById("styleInput").value.trim();
+          const length = document.getElementById("lengthInput").value.trim();
+          const loader = document.getElementById("loader");
+          const outputContainer = document.getElementById("blogOutput");
+          const section = document.getElementById("section5");
+
+          if (!topic || !style || !length) {
+            alert("Please fill in all fields.");
+            return;
+          }
+
+          loader.classList.remove("hidden");
+
+          setTimeout(() => {
+            loader.classList.add("hidden");
+
+            const output = `
+            <p><strong>Topic:</strong> ${topic}</p>
+            <p><strong>Style:</strong> ${style}</p>
+            <p><strong>Length:</strong> ${length}</p>
+            <p class="mt-4">🧠 Here is your generated blog! This is a placeholder for dynamic content based on your input. Replace this logic with actual AI/blog generation API.</p>
+          `;
+
+            outputContainer.innerHTML = output;
+            section.classList.remove("hidden");
+            section.scrollIntoView({ behavior: "smooth" });
+          }, 1500);
+        });
+    </script>
+  </body>
+</html>
