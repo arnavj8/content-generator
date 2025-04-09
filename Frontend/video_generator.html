@@ -3,100 +3,125 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Generator</title>
+    <title>🎥 Video Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+      }
+    </style>
   </head>
-   <body class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white">
+  <body class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white">
     <div class="flex flex-1">
       <!-- Sidebar -->
-      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10"></div>
+      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"></div>
 
       <!-- Main Content -->
-      <main class="flex-1 p-10 bg-gray-50 ml-[25%]">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">🎥 Video Generator</h1>
+      <main class="flex-1 w-full lg:ml-[25%] px-4 sm:px-10 py-12">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-5xl font-extrabold text-center mb-12 text-gray-800 drop-shadow-md">
+            🎥 Video Generator
+          </h1>
 
-        <form id="videoForm" class="w-full max-w-2xl space-y-6">
-          <!-- Video Topic Input -->
-          <div>
-            <label class="block text-lg font-medium text-gray-800 mb-2">Enter Video Topic:</label>
-            <div class="flex items-center gap-3">
-              <div class="relative flex-1">
+          <form id="videoForm" class="bg-white/50 backdrop-blur-2xl shadow-2xl border border-gray-200 rounded-3xl px-8 sm:px-12 py-12 space-y-8">
+            <!-- Topic Input -->
+            <div>
+              <label class="block text-xl font-semibold text-gray-700 mb-2">Enter the topic:</label>
+              <div class="flex gap-3 items-center">
                 <input
                   type="text"
                   id="videoTopic"
-                  class="w-full p-3 pr-10 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  placeholder="Type video topic here"
+                  class="flex-grow p-4 border border-gray-300 rounded-xl bg-white/60 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
+                  placeholder="e.g., How AI is changing the world"
                 />
-                <div id="videoLoader" class="absolute top-1/2 right-3 transform -translate-y-1/2 hidden">
-                  <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                  </svg>
-                </div>
+                <button
+                  type="button"
+                  id="searchVideoButton"
+                  class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition whitespace-nowrap"
+                >
+                  🔍
+                </button>
               </div>
+            </div>
 
-              <!-- Search Button -->
+            <!-- Video Style -->
+            <div>
+              <label class="block text-xl font-semibold text-gray-700 mb-2">Video Style:</label>
+              <input
+                id="videoStyle"
+                type="text"
+                class="w-full p-4 border border-gray-300 rounded-xl bg-white/60 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
+                placeholder="e.g., Documentary, Animated, Whiteboard"
+              />
+            </div>
+
+            <!-- Generate Button & Loader -->
+            <div class="flex flex-col items-center gap-4">
               <button
                 type="button"
-                id="searchVideoButton"
-                class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                id="generateVideoButton"
+                class="bg-green-600 text-white px-10 py-4 rounded-2xl hover:bg-green-700 hover:scale-105 transition-all duration-300 font-bold text-lg shadow-lg"
               >
-                🔍
+                🎬 Generate Video
               </button>
+
+              <!-- Loader Spinner -->
+              <div id="videoLoader" class="hidden flex items-center gap-4 mt-2">
+                <div class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-black font-medium text-lg">Generating...</span>
+              </div>
             </div>
-          </div>
+          </form>
 
-          <!-- Video Style -->
-          <div>
-            <label class="block text-lg font-medium text-gray-800 mb-1">Video Style:</label>
-            <input
-              id="videoStyle"
-              type="text"
-              class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Describe video style"
-            />
-          </div>
-
-          <!-- Generate Button -->
-          <div class="flex justify-center">
-            <button
-              type="button"
-              id="generateVideoButton"
-              class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-semibold text-lg"
-            >
-              🎬 Generate Video
-            </button>
-          </div>
-        </form>
-
-        <!-- Output Section -->
-        <section id="videoOutput" class="hidden mt-12 border-t pt-10">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">📽️ Generated Video</h2>
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <p id="videoDescription" class="mb-4 text-gray-700 text-lg"></p>
-            <video
-              id="generatedVideo"
-              controls
-              class="w-full rounded-lg shadow-lg"
-            >
-              <!-- Dynamic source will be injected here via JavaScript -->
-            </video>
-          </div>
-        </section>
+          <!-- Output Section -->
+          <section id="videoOutput" class="hidden mt-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">📽️ Your Generated Video</h2>
+            <div class="bg-white/60 p-8 rounded-3xl shadow-xl max-w-3xl mx-auto backdrop-blur-lg border border-gray-200">
+              <p id="videoDescription" class="mb-6 text-gray-700 text-lg leading-relaxed text-center"></p>
+              <video
+                id="generatedVideo"
+                controls
+                class="w-full rounded-2xl shadow-lg border border-gray-300 mb-6"
+              >
+                <!-- Dynamic source will be injected here -->
+              </video>
+              <!-- Download Button -->
+              <div class="flex justify-center">
+                <button
+                  id="downloadVideoLink"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-semibold text-lg shadow-md transition-all duration-300 cursor-pointer hidden"
+                >
+                  🎯 Download Video
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
       </main>
     </div>
 
+    <!-- JS -->
     <script>
-      // Load sidebar
-      fetch("sidebar.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("sidebar-container").innerHTML = html;
+      // Load sidebar from sidebar.html
+      fetch('sidebar.html')
+        .then(res => res.text())
+        .then(html => {
+          const sidebarContainer = document.getElementById('sidebar-container');
+          sidebarContainer.innerHTML = html;
+
+          // Highlight current link
+          const links = sidebarContainer.querySelectorAll('a');
+          links.forEach(link => {
+            link.classList.remove('bg-blue-100', 'bg-blue-200', 'bg-blue-500', 'text-white', 'ring', 'ring-offset-2');
+            if (link.href === window.location.href) {
+              link.classList.add('font-bold', 'text-blue-600');
+            }
+          });
         });
 
-      // Generate Video Logic
-      document.addEventListener("click", function (e) {
-        if (e.target.id === "generateVideoButton" || e.target.id === "searchVideoButton") {
+      // Video generation and download logic
+      document.addEventListener('click', function (e) {
+        if (e.target.id === 'generateVideoButton' || e.target.id === 'searchVideoButton') {
           const topic = document.getElementById("videoTopic").value.trim();
           const style = document.getElementById("videoStyle").value.trim();
           const loader = document.getElementById("videoLoader");
@@ -109,22 +134,34 @@
           loader.classList.remove("hidden");
 
           setTimeout(() => {
-            const description = `Here's a video based on "<strong>${topic}</strong>" in "<strong>${style}</strong>" style.`;
+            const description = `Here is a video generated based on the topic <strong>"${topic}"</strong> in <strong>"${style}"</strong> style.`;
             document.getElementById("videoDescription").innerHTML = description;
 
-            // Simulate a video fetch (replace URL with actual AI-generated video)
+            // Replace with your actual video URL
+            const videoURL = "https://www.w3schools.com/html/mov_bbb.mp4";
             const videoElement = document.getElementById("generatedVideo");
-            videoElement.innerHTML = ''; // Clear old source
+            videoElement.innerHTML = '';
             const source = document.createElement("source");
-            source.src = ""; // <-- Put dynamic AI-generated video URL here
+            source.src = videoURL;
             source.type = "video/mp4";
             videoElement.appendChild(source);
+
+            const downloadBtn = document.getElementById("downloadVideoLink");
+            downloadBtn.classList.remove("hidden");
+            downloadBtn.onclick = function () {
+              const a = document.createElement("a");
+              a.href = videoURL;
+              a.download = "generated-video.mp4";
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            };
 
             document.getElementById("videoOutput").classList.remove("hidden");
             document.getElementById("videoOutput").scrollIntoView({ behavior: "smooth" });
 
             loader.classList.add("hidden");
-          }, 1000);
+          }, 1200);
         }
       });
     </script>
