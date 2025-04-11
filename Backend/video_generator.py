@@ -73,7 +73,7 @@ def create_final_video(script_data, images_folder, voiceover_folder, bg_music_pa
         audio_clip = mp.AudioFileClip(audio_path)
         img_clip = img_clip.set_duration(audio_clip.duration).set_audio(audio_clip)
 
-        transition = scene.get("suggested_transition_effect", "fade-in").lower()
+        transition = scene.get("suggested_transition_effect", "zoom out").lower()
         if transition == "fade-in":
             img_clip = fadein.fadein(img_clip, 1)
         elif transition == "crossfade":
