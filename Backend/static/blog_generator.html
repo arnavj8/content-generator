@@ -7,191 +7,249 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
       body {
-        background: linear-gradient(135deg, #f0f0f0, #dcdcdc);
+        font-family: "Inter", sans-serif;
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
       }
     </style>
   </head>
 
-  <body
-    class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white"
-  >
-    <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <div
-        id="sidebar-container"
-        class="w-1/4 fixed top-0 left-0 h-full z-10 hidden lg:block"
-      ></div>
+  <body class="bg-[#F5F7FF] min-h-screen flex">
+    <!-- Sidebar -->
 
-      <!-- Main Content -->
-      <main class="flex-1 w-full lg:ml-[25%] px-6 sm:px-12 py-12">
-        <!-- Blog Generator Heading -->
-        <h1
-          class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-10 text-center flex items-center justify-center gap-3"
-        >
-          <span class="text-4xl">📝</span> <span>Blog Generator</span>
-        </h1>
+    <aside id="sidebar" class="h-screen"></aside>
 
-        <div
-          class="max-w-4xl mx-auto bg-white/60 backdrop-blur-2xl border border-white/30 rounded-3xl p-10 shadow-2xl"
-        >
-          <!-- Form Section -->
-          <form id="blogForm" class="space-y-8">
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-block bg-white rounded-full px-4 py-2 mb-4">
+            <span
+              class="text-sm font-medium text-blue-600 flex items-center gap-2"
+            >
+              ✨ AI-Powered Blog Creation
+            </span>
+          </div>
+
+          <h1 class="text-4xl font-bold text-slate-800 mb-4">Blog Generator</h1>
+
+          <p class="text-slate-600 text-lg">
+            Transform your ideas into well-crafted blog posts with AI assistance
+          </p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+          <form id="blogForm" class="space-y-6">
             <!-- Topic -->
             <div>
-              <label class="block text-lg font-medium mb-2 text-black"
-                >Enter the topic:</label
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Blog Topic</label
               >
-              <div class="flex gap-3 items-center">
+              <div class="flex gap-3">
                 <input
                   id="topicInput"
                   type="text"
-                  class="flex-1 p-4 rounded-xl bg-white/70 border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                  class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
                   placeholder="e.g., AI in Healthcare"
                 />
                 <button
                   type="button"
                   id="searchTopicButton"
-                  class="px-4 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition"
+                  class="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
                 >
-                  🔍
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
 
-            <!-- Style -->
+            <!-- Writing Style -->
             <div>
-              <label class="block text-lg font-medium mb-2 text-black"
-                >Writing Style:</label
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Writing Style</label
               >
               <input
                 id="styleInput"
                 type="text"
-                class="w-full p-4 rounded-xl bg-white/70 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                placeholder="e.g., Formal, Humorous"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                placeholder="e.g., Formal, Conversational, Technical"
               />
             </div>
 
             <!-- Length -->
             <div>
-              <label class="block text-lg font-medium mb-2 text-black"
-                >Approx Length:</label
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Article Length</label
               >
               <input
                 id="lengthInput"
                 type="text"
-                class="w-full p-4 rounded-xl bg-white/70 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
-                placeholder="e.g., 300 words, 2 paragraphs"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                placeholder="e.g., 500 words, 3 paragraphs"
               />
             </div>
 
             <!-- Generate Button -->
-            <div class="flex flex-col gap-4 items-center">
+            <div class="flex flex-col items-center pt-4">
               <button
                 type="button"
                 id="generateButton"
-                class="bg-gradient-to-r from-green-400 via-green-500 to-emerald-600 text-white text-lg px-10 py-4 rounded-2xl font-semibold shadow-lg hover:scale-105 transition-all"
+                class="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-medium transition-colors flex items-center gap-2"
               >
-                ✍️ Generate Blog
+                <span>Generate Blog</span>
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                  />
+                </svg>
               </button>
 
               <!-- Loader -->
-              <div id="loader" class="hidden flex items-center space-x-3">
+              <div id="loader" class="hidden items-center gap-3 mt-4">
                 <div
-                  class="w-6 h-6 border-4 border-t-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                  class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"
                 ></div>
-                <span class="text-black text-base font-medium"
-                  >Generating...</span
+                <span class="text-slate-600 text-sm"
+                  >Generating your blog...</span
                 >
               </div>
             </div>
           </form>
+        </div>
 
-          <!-- Output Section -->
-          <section id="section5" class="mt-12 hidden">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-              📰 Generated Blog
-            </h2>
-            <div
-              id="blogOutput"
-              class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 text-gray-800 text-lg space-y-4"
+        <!-- Output Section -->
+        <section id="section5" class="mt-8 hidden">
+          <div
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8"
+          >
+            <h2
+              class="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2"
             >
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Generated Blog
+            </h2>
+            <div id="blogOutput" class="prose prose-slate max-w-none">
               <!-- Blog content will appear here -->
             </div>
-          </section>
-        </div>
-      </main>
-    </div>
+          </div>
+        </section>
+      </div>
+    </main>
 
     <!-- Sidebar Load Script -->
     <script>
-      fetch("sidebar.html")
+      fetch("/static/sidebar.html")
         .then((res) => res.text())
         .then((html) => {
-          const sidebar = document.getElementById("sidebar-container");
-          sidebar.innerHTML = html;
+          const sidebarContainer = document.getElementById("sidebar");
+          sidebarContainer.innerHTML = html;
+        });
+      document
+        .getElementById("generateButton")
+        .addEventListener("click", async () => {
+          const topic = document.getElementById("topicInput").value.trim();
+          const style = document.getElementById("styleInput").value.trim();
+          const length = document.getElementById("lengthInput").value.trim();
+          const outputContainer = document.getElementById("blogOutput");
+          const section = document.getElementById("section5");
+          const loader = document.getElementById("loader");
+
+          if (!topic || !style || !length) {
+            alert("Please fill in all details");
+            return;
+          }
+
+          try {
+            loader.classList.remove("hidden");
+
+            const response = await fetch("/generate_blog", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ topic, style, length }),
+            });
+
+            const data = await response.text();
+            const rawMarkdown = data;
+
+            const parsedHTML = marked.parse(rawMarkdown.replace(/\\n/g, "\n")); // Replace literal \n with real newlines
+            outputContainer.innerHTML = parsedHTML;
+
+            // outputContainer.innerHTML = marked.parse(data);
+
+            // // 👉 Inject Tailwind classes to Markdown elements
+            const applyClass = (selector, className) => {
+              outputContainer
+                .querySelectorAll(selector)
+                .forEach((el) => (el.className = className));
+            };
+
+            applyClass("h1", "text-3xl font-bold text-gray-800 mt-6 mb-3");
+            applyClass("h2", "text-2xl font-semibold text-gray-700 mt-5 mb-3");
+            applyClass("h3", "text-xl font-semibold text-gray-600 mt-4 mb-2");
+            applyClass("p", "text-base text-gray-700 mb-4 leading-relaxed");
+            applyClass("ul", "list-disc pl-6 mb-4");
+            applyClass("ol", "list-decimal pl-6 mb-4");
+            applyClass("li", "mb-2");
+            applyClass("img", "max-w-full h-auto my-4 rounded-lg shadow");
+            applyClass(
+              "blockquote",
+              "border-l-4 border-blue-500 bg-blue-50 text-blue-900 italic px-4 py-2 mb-4"
+            );
+            applyClass("code", "bg-gray-100 text-red-600 px-1 py-0.5 rounded");
+            applyClass(
+              "pre",
+              "bg-gray-900 text-white text-sm p-4 rounded overflow-x-auto mb-4"
+            );
+
+            section.classList.remove("hidden");
+            section.scrollIntoView({ behavior: "smooth" });
+          } catch (error) {
+            console.error("Error generating blog:", error);
+            alert("An error occurred while generating the blog.");
+          } finally {
+            loader.classList.add("hidden");
+          }
         });
     </script>
-
-  <!-- Blog Generation Script -->
-  <script>
-    document.getElementById("generateButton").addEventListener("click", async () => {
-      const topic = document.getElementById("topicInput").value.trim();
-      const style = document.getElementById("styleInput").value.trim();
-      const length = document.getElementById("lengthInput").value.trim();
-      const outputContainer = document.getElementById("blogOutput");
-      const section = document.getElementById("section5");
-      const loader = document.getElementById("loader");
-
-      if (!topic || !style || !length) {
-        alert("Please fill in all details");
-        return;
-      }
-
-      try {
-        loader.classList.remove("hidden");
-
-        const response = await fetch("/generate_blog", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topic, style, length }),
-        });
-
-        const data = await response.text();
-        const rawMarkdown = data; 
-
-        const parsedHTML = marked.parse(rawMarkdown.replace(/\\n/g, '\n')); // Replace literal \n with real newlines
-        outputContainer.innerHTML = parsedHTML;
-
-        // outputContainer.innerHTML = marked.parse(data);
-
-        // // 👉 Inject Tailwind classes to Markdown elements
-        const applyClass = (selector, className) => {
-          outputContainer.querySelectorAll(selector).forEach(el => el.className = className);
-        };
-
-        applyClass("h1", "text-3xl font-bold text-gray-800 mt-6 mb-3");
-        applyClass("h2", "text-2xl font-semibold text-gray-700 mt-5 mb-3");
-        applyClass("h3", "text-xl font-semibold text-gray-600 mt-4 mb-2");
-        applyClass("p", "text-base text-gray-700 mb-4 leading-relaxed");
-        applyClass("ul", "list-disc pl-6 mb-4");
-        applyClass("ol", "list-decimal pl-6 mb-4");
-        applyClass("li", "mb-2");
-        applyClass("img", "max-w-full h-auto my-4 rounded-lg shadow");
-        applyClass("blockquote", "border-l-4 border-blue-500 bg-blue-50 text-blue-900 italic px-4 py-2 mb-4");
-        applyClass("code", "bg-gray-100 text-red-600 px-1 py-0.5 rounded");
-        applyClass("pre", "bg-gray-900 text-white text-sm p-4 rounded overflow-x-auto mb-4");
-
-        section.classList.remove("hidden");
-        section.scrollIntoView({ behavior: "smooth" });
-
-      } catch (error) {
-        console.error("Error generating blog:", error);
-        alert("An error occurred while generating the blog.");
-      } finally {
-        loader.classList.add("hidden");
-      }
-    });
-  </script>
   </body>
 </html>

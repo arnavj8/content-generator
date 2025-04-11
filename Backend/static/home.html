@@ -1,201 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Content Generator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .card {
-      transition: all 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 25px 35px -10px rgba(0,0,0,0.15);
-    }
-    .icon:hover {
-      transform: scale(1.15);
-      transition: transform 0.2s ease;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-    .chat-message {
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-        .typing-indicator span {
-            animation: blink 1s infinite;
-        }
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        @keyframes blink {
-            0% { opacity: 0.2; }
-            20% { opacity: 1; }
-            100% { opacity: 0.2; }
-        }
-        .chat-container {
-            transition: all 0.3s ease-in-out;
-        }
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        code {
-            background-color: #f0f0f0;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-  </style>
-</head>
-<body class="bg-gray-400 min-h-screen flex font-sans">
+      body {
+        font-family: "Inter", sans-serif;
+      }
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="w-72 bg-white shadow-lg border-r border-gray-200"></aside>
+      .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-  <!-- Main Content -->
-  <main class="flex-1 p-10 overflow-y-auto">
-    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-2xl space-y-10 card">
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.1);
+      }
 
-      <!-- Header -->
-      <div class="text-center space-y-4">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 flex justify-center items-center gap-3">
-          <i data-feather="cpu" class="w-8 h-8 text-rose-600 icon"></i> Content Generator
-        </h1>
-        <p class="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-          Unleash the power of AI to craft compelling, high-quality content in just a few clicks. Whether you're building blogs, captions, or marketing copy—our smart generator delivers ideas that resonate, instantly. 💡
-        </p>
+      .feature-icon {
+        transition: all 0.3s ease;
+      }
+
+      .feature-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
+      .chat-message {
+        max-width: 80%;
+        word-wrap: break-word;
+      }
+      .typing-indicator span {
+        animation: blink 1s infinite;
+      }
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 0.2;
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.2;
+        }
+      }
+      .chat-container {
+        transition: all 0.3s ease-in-out;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      code {
+        background-color: #f0f0f0;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+    </style>
+
+  </head>
+  <body class="bg-[#F5F7FF] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 fixed h-screen"></aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64">
+      <!-- Removed padding and adjusted margin -->
+      <div class="max-w-4xl mx-auto py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <div class="inline-block bg-white rounded-full px-4 py-2 mb-4">
+            <span
+              class="text-sm font-medium text-blue-600 flex items-center gap-2"
+            >
+              ✨ AI-Powered Content Creation
+            </span>
+          </div>
+
+          <h1 class="text-4xl font-bold text-blue-600 mb-4">
+            Content Generator
+          </h1>
+
+          <p class="text-slate-600 text-lg">
+            Transform your ideas into compelling content with our AI-powered
+            platform.<br />
+            Create blogs, images, videos, and memes in minutes.
+          </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid md:grid-cols-2 gap-6 mb-12">
+          <!-- Added margin-bottom -->
+          <!-- Blog Generation -->
+          <a
+            href="/static/blog_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="edit-3" class="w-6 h-6 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Blog Generation
+            </h3>
+            <p class="text-slate-600">
+              Create engaging blog posts with AI assistance. Perfect for content
+              creators and marketers.
+            </p>
+          </a>
+
+          <!-- Image Creation -->
+          <a
+            href="/static/image_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="image" class="w-6 h-6 text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Image Creation
+            </h3>
+            <p class="text-slate-600">
+              Generate unique images from text descriptions. Ideal for social
+              media and marketing.
+            </p>
+          </a>
+
+          <!-- Video Generation -->
+          <a
+            href="/static/video_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="video" class="w-6 h-6 text-rose-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Video Generation
+            </h3>
+            <p class="text-slate-600">
+              Create compelling video content with AI-powered tools and
+              templates.
+            </p>
+          </a>
+
+          <!-- Meme Creator -->
+          <a
+            href="/static/meme_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="smile" class="w-6 h-6 text-amber-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Meme Creator
+            </h3>
+            <p class="text-slate-600">
+              Generate viral-worthy memes instantly with our AI-powered meme
+              generator.
+            </p>
+          </a>
+        </div>
+
+        <!-- How It Works Section -->
+        <section
+          class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-12 mt-12"
+        >
+          <!-- Added margin-top -->
+          <h2 class="text-2xl font-semibold text-slate-800 mb-6">
+            How It Works
+          </h2>
+          <div class="space-y-6">
+            <!-- Increased spacing between items -->
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <!-- Increased size -->
+                <span class="text-blue-600 font-medium">1</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Choose Content Type
+                </h3>
+                <!-- Added margin-bottom -->
+                <p class="text-slate-600">
+                  Select the type of content you want to generate
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-blue-600 font-medium">2</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Enter Description
+                </h3>
+                <p class="text-slate-600">
+                  Provide details about what you want to create
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-blue-600 font-medium">3</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Generate & Edit
+                </h3>
+                <p class="text-slate-600">
+                  Review, edit, and perfect your generated content
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Footer -->
+        <footer
+          class="text-center text-slate-600 py-8 border-t border-slate-200"
+        >
+          <p>
+            © 2025 Content Generator. Created by
+            <span class="font-medium text-slate-800">Gaurav Kumar Chaurasiya</span> &
+            <span class="font-medium text-slate-800">Arnav Jain</span>
+          </p>
+        </footer>
       </div>
+    </main>
+    <!-- Chat Button -->
+    <button
+      id="chat-button"
+      class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-blue-700 focus:outline-none z-50"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+        />
+      </svg>
+    </button>
 
-      <hr class="border-gray-200" />
-
-      <!-- What It Does -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="zap" class="text-rose-500 w-6 h-6 icon"></i> What It Does
-        </h2>
-        <p class="text-gray-700 text-base mt-2 leading-relaxed">
-          Turn ideas into polished content—faster than ever. Our generator supports everything from blog intros to social media hooks, helping you go from prompt to publish-ready in seconds. Powered by advanced natural language AI.
-        </p>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Features -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="star" class="text-yellow-500 w-6 h-6 icon"></i> Features
-        </h2>
-        <ul class="list-disc list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Lightning-fast AI-powered output</li>
-          <li>Choose from multiple tones and content formats</li>
-          <li>Seamless one-click copy for hassle-free usage</li>
-          <li>Responsive and intuitive interface</li>
-        </ul>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Quick Guide -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="book-open" class="text-green-600 w-6 h-6 icon"></i> Quick Guide
-        </h2>
-        <ol class="list-decimal list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Pick the type of content you'd like to generate</li>
-          <li>Enter a prompt, topic, or idea</li>
-          <li>Hit "Generate" and watch the AI work its magic</li>
-        </ol>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Tips -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="info" class="text-amber-500 w-6 h-6 icon"></i> Tips
-        </h2>
-        <ul class="list-disc list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Keep your prompts clear and concise for best results</li>
-          <li>Try out different tones—formal, casual, witty, or persuasive</li>
-          <li>Review and tweak output to match your brand’s voice</li>
-        </ul>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Footer -->
-      <footer class="pt-4 text-center text-sm text-gray-500">
-        © 2025 <span class="font-medium text-gray-700">Gaurav</span> & <span class="font-medium text-gray-700">Arnav</span> • Built with ❤️
-      </footer>
-
-    </div>
-  </main>
-  <!-- Chat Button -->
-  <button id="chat-button" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-blue-700 focus:outline-none z-50">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-    </svg>
-</button>
-
-<!-- Chat Container -->
-<div id="chat-container" class="chat-container fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl overflow-hidden z-50 hidden">
-    <!-- Chat Header -->
-    <div class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
+    <!-- Chat Container -->
+    <div
+      id="chat-container"
+      class="chat-container fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl overflow-hidden z-50 hidden"
+    >
+      <!-- Chat Header -->
+      <div
+        class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center"
+      >
         <h3 class="font-medium">Chat with Your Code</h3>
         <button id="close-chat" class="focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
         </button>
-    </div>
-    
-    <!-- Chat Messages -->
-    <div id="chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
+      </div>
+
+      <!-- Chat Messages -->
+      <div id="chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
         <div class="flex items-start mb-4">
-            <div class="bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message">
-                Hi! I'm your code assistant. Ask me anything about the repository.
-            </div>
+          <div
+            class="bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message"
+          >
+            Hi! I'm your code assistant. Ask me anything about the repository.
+          </div>
         </div>
-    </div>
-    
-    <!-- Chat Input -->
-    <div class="border-t border-gray-200 p-4 bg-white">
+      </div>
+
+      <!-- Chat Input -->
+      <div class="border-t border-gray-200 p-4 bg-white">
         <div class="flex items-center">
-            <input id="user-input" type="text" 
-                placeholder="Ask about the code..." 
-                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled>
-            <button id="send-button" 
-                class="ml-2 bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 focus:outline-none disabled:opacity-50"
-                disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                </svg>
-            </button>
+          <input
+            id="user-input"
+            type="text"
+            placeholder="Ask about the code..."
+            class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled
+          />
+          <button
+            id="send-button"
+            class="ml-2 bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 focus:outline-none disabled:opacity-50"
+            disabled
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+              />
+            </svg>
+          </button>
         </div>
         <div id="status-message" class="text-xs text-gray-500 mt-2"></div>
+      </div>
     </div>
-</div>
 
-  <!-- Sidebar + Feather Icons -->
-  <script>
-    fetch("/static/sidebar.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("sidebar").innerHTML = data;
-        feather.replace();
-      });
+    <!-- Sidebar + Feather Icons -->
+    <script>
+      fetch("/static/sidebar.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("sidebar").innerHTML = data;
+          feather.replace();
+        });
 
-    window.addEventListener("DOMContentLoaded", () => feather.replace());
-    
-  </script>
-  <script src="/static/script.js"></script>
-</body>
+      window.addEventListener("DOMContentLoaded", () => feather.replace());
+    </script>
+    <script src="/static/script.js"></script>
+  </body>
 </html>

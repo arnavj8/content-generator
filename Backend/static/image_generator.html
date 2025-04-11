@@ -3,154 +3,245 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🌈 Image Generator</title>
+    <title>🖼️ Image Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
       body {
-        background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+        font-family: "Inter", sans-serif;
       }
-      
     </style>
   </head>
-  <body class="bg-gradient-to-br from-gray-400 to-gray-600 min-h-screen flex flex-col text-white">
-    <div class="flex flex-1">
-      <!-- Sidebar -->
-      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"></div>
 
-      <!-- Main Content -->
-      <main class="flex-1 w-full lg:ml-[25%] px-4 sm:px-10 py-12">
-        <div class="max-w-4xl mx-auto">
-          <h1 class="text-5xl font-extrabold text-center mb-12 text-gray-800 drop-shadow-md">
-            🖼️ Image Generator
+  <body class="bg-[#F5F7FF] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="h-screen bg-[#F5F7FF]"></aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-block bg-white rounded-full px-4 py-2 mb-4">
+            <span
+              class="text-sm font-medium text-blue-600 flex items-center gap-2"
+            >
+              ✨ AI-Powered Image Creation
+            </span>
+          </div>
+
+          <h1 class="text-4xl font-bold text-slate-800 mb-4">
+            Image Generator
           </h1>
 
-          <form id="imageForm" class="bg-white/50 backdrop-blur-2xl shadow-2xl border border-gray-200 rounded-3xl px-8 sm:px-12 py-12 space-y-8">
-            <!-- Topic Input -->
-           <div>
-  <label class="block text-xl font-semibold text-gray-700 mb-2">Enter the topic:</label>
-  <div class="flex gap-3 items-center">
-    <input
-      type="text"
-      id="topicInput"
-      class="text-black flex-grow p-4 border border-gray-300 rounded-xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
-      placeholder="e.g., A futuristic city at sunset"
-    />
-    <button
-      type="button"
-      id="searchTopicButton"
-      class="px-4 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition whitespace-nowrap"
-    >
-      🔍
-    </button>
-  </div>
-</div>
+          <p class="text-slate-600 text-lg">
+            Transform your ideas into stunning images with AI assistance
+          </p>
+        </div>
 
-
-            <!-- Image Style -->
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+          <form id="imageForm" class="space-y-6">
+            <!-- Topic -->
             <div>
-              <label class="block text-xl font-semibold text-gray-700 mb-2">Image Style:</label>
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Image Description</label
+              >
+              <div class="flex gap-3">
+                <input
+                  id="topicInput"
+                  type="text"
+                  class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                  placeholder="e.g., A futuristic city at sunset"
+                />
+                <button
+                  type="button"
+                  id="searchTopicButton"
+                  class="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Style -->
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Image Style</label
+              >
               <input
                 id="styleInput"
                 type="text"
-                class="text-black w-full p-4 border border-gray-300 rounded-xl bg-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition"
-                placeholder="e.g., Realistic, Anime, Sketch"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                placeholder="e.g., Realistic, Anime, Oil Painting"
               />
             </div>
 
-            <!-- Generate Button & Loader -->
-            <div class="flex flex-col items-center gap-4">
+            <!-- Generate Button -->
+            <div class="flex flex-col items-center pt-4">
               <button
-  type="button"
-  id="generateButton"
-  class="bg-green-600 text-white px-10 py-4 rounded-2xl hover:bg-green-700 hover:scale-105 transition-all duration-300 font-bold text-lg shadow-lg"
->
-                🎨 Generate Image
+                type="button"
+                id="generateButton"
+                class="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-medium transition-colors flex items-center gap-2"
+              >
+                <span>Generate Image</span>
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
               </button>
 
-              <!-- Loader Spinner -->
-<div id="loader" class="hidden flex items-center gap-4 mt-2">
-  <div class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-  <span class="text-black font-medium text-lg">Generating...</span>
-</div>
-
+              <!-- Loader -->
+              <div id="loader" class="hidden items-center gap-3 mt-4">
+                <div
+                  class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"
+                ></div>
+                <span class="text-slate-600 text-sm"
+                  >Generating your image...</span
+                >
+              </div>
             </div>
           </form>
+        </div>
 
-          <!-- Output Section -->
-          <section id="section8" class="hidden mt-16">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">✨ Your Generated Image</h2>
-            <div class="bg-white/60 p-8 rounded-3xl shadow-xl max-w-3xl mx-auto backdrop-blur-lg border border-gray-200">
-              <p id="imageDescription" class="mb-6 text-gray-700 text-lg leading-relaxed text-center"></p>
+        <!-- Output Section -->
+        <section id="section8" class="mt-8 hidden">
+          <div
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8"
+          >
+            <h2
+              class="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Generated Image
+            </h2>
+            <p id="imageDescription" class="text-slate-600 mb-6"></p>
+            <div class="rounded-xl overflow-hidden border border-slate-200">
               <img
                 id="generatedImage"
-                src="https://via.placeholder.com/600x400?text=Generated+Image"
+                src="https://via.placeholder.com/600x400?text=Your+Image+Will+Appear+Here"
                 alt="Generated Image"
-                class="w-2/3 mx-auto rounded-2xl shadow-lg border border-gray-300"
+                class="w-full h-auto"
               />
             </div>
-          </section>
-        </div>
-      </main>
-    </div>
+          </div>
+        </section>
+      </div>
+    </main>
 
-    <!-- JS -->
     <script>
       // Load sidebar and fix highlight
-      fetch('/static/sidebar.html')
-        .then(res => res.text())
-        .then(html => {
-          const sidebarContainer = document.getElementById('sidebar-container');
+      fetch("/static/sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebarContainer = document.getElementById("sidebar");
           sidebarContainer.innerHTML = html;
 
           // Clean up sidebar highlight
-          const links = sidebarContainer.querySelectorAll('a');
-          links.forEach(link => {
-            link.classList.remove('bg-blue-100', 'bg-blue-200', 'bg-blue-500', 'text-white', 'ring', 'ring-offset-2');
+          const links = sidebarContainer.querySelectorAll("a");
+          links.forEach((link) => {
+            link.classList.remove(
+              "bg-blue-100",
+              "bg-blue-200",
+              "bg-blue-500",
+              "text-white",
+              "ring",
+              "ring-offset-2"
+            );
             if (link.href === window.location.href) {
-              link.classList.add('font-bold', 'text-blue-600');
+              link.classList.add("font-bold", "text-blue-600");
             }
           });
         });
 
-        document.addEventListener('click', function (e) {
-    if (e.target.id === 'generateButton') {
-      const topic = document.getElementById("topicInput").value.trim();
-      const style = document.getElementById("styleInput").value.trim();
-      const loader = document.getElementById("loader");
+        document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementsByClassName("aside");
+          console.log('i am here '+sidebar.classList)
+        // Remove w-1/4 if present
+        sidebar.classList.remove("w-1/4");
 
-      if (!topic || !style) {
-        alert("Please fill in both topic and style fields.");
-        return;
-      }
+        // Ensure w-full is applied
+        sidebar.classList.add("w-full");
+      });
 
-      loader.classList.remove("hidden");
+      document.addEventListener("click", function (e) {
+        if (e.target.id === "generateButton") {
+          const topic = document.getElementById("topicInput").value.trim();
+          const style = document.getElementById("styleInput").value.trim();
+          const loader = document.getElementById("loader");
 
-      fetch("/generate-image", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ topic, style })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.image) {
-            document.getElementById("imageDescription").innerHTML = data.description;
-            document.getElementById("generatedImage").src = `data:image/png;base64,${data.image}`;
-            document.getElementById("section8").classList.remove("hidden");
-            document.getElementById("section8").scrollIntoView({ behavior: "smooth" });
-          } else {
-            alert("Image could not be generated. Try again later.");
+          if (!topic || !style) {
+            alert("Please fill in both topic and style fields.");
+            return;
           }
-          loader.classList.add("hidden");
-        })
-        .catch(err => {
-          alert("Failed to generate image. Please check server logs.");
-          loader.classList.add("hidden");
-          console.error(err);
-        });
-    }
-  });
+
+          loader.classList.remove("hidden");
+
+          fetch("/generate-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ topic, style }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.image) {
+                document.getElementById("imageDescription").innerHTML =
+                  data.description;
+                document.getElementById(
+                  "generatedImage"
+                ).src = `data:image/png;base64,${data.image}`;
+                document.getElementById("section8").classList.remove("hidden");
+                document
+                  .getElementById("section8")
+                  .scrollIntoView({ behavior: "smooth" });
+              } else {
+                alert("Image could not be generated. Try again later.");
+              }
+              loader.classList.add("hidden");
+            })
+            .catch((err) => {
+              alert("Failed to generate image. Please check server logs.");
+              loader.classList.add("hidden");
+              console.error(err);
+            });
+        }
+      });
     </script>
   </body>
 </html>

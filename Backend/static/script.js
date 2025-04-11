@@ -182,3 +182,91 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+// // Add this to your script.js
+// const toggleSidebar = () => {
+//     const sidebar = document.querySelector('aside');
+//     sidebar.classList.toggle('-translate-x-full');
+// }
+
+// Add a button for mobile menu toggle
+const addMobileMenuButton = () => {
+    const button = document.createElement('button');
+    button.className = 'lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 text-white';
+    button.innerHTML = `
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    `;
+    button.onclick = toggleSidebar;
+    document.body.appendChild(button);
+}
+
+// Initialize mobile menu
+if (window.innerWidth < 1024) {
+    addMobileMenuButton();
+}
+
+// Add this to your script.js or create a new api-client.js
+const ApiClient = {
+    checkKeys() {
+        if (!ApiKeyManager.hasValidKeys()) {
+            throw new Error('Please enter your API keys in the sidebar before generating content.');
+        }
+    },
+
+    async makeApiCall(endpoint, data) {
+        this.checkKeys();
+        
+        const keys = ApiKeyManager.loadKeys();
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Gemini-Key': keys.gemini,
+                'X-Huggingface-Key': keys.huggingface
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('API call failed. Please check your API keys.');
+        }
+
+        return await response.json();
+    }
+};
+
+// Example usage in blog generation
+document.getElementById('generateButton').addEventListener('click', async () => {
+    try {
+        // Check for API keys first
+        ApiClient.checkKeys();
+
+        const topic = document.getElementById('topicInput').value.trim();
+        const style = document.getElementById('styleInput').value.trim();
+
+        if (!topic || !style) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Show loader
+        document.getElementById('loader').classList.remove('hidden');
+
+        const result = await ApiClient.makeApiCall('/generate_blog', {
+            topic: topic,
+            style: style
+        });
+
+        // Handle successful generation
+        document.getElementById('blogOutput').innerHTML = result.content;
+        document.getElementById('section5').classList.remove('hidden');
+
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        document.getElementById('loader').classList.add('hidden');
+    }
+});

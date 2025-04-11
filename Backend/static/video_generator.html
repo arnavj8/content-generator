@@ -3,95 +3,169 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Generator</title>
+    <title>🎥 Video Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-    <div class="flex flex-1">
-      <!-- Sidebar -->
-      <div id="sidebar-container" class="w-1/4 h-screen fixed top-0 left-0 z-10"></div>
 
-      <!-- Main Content -->
-      <main class="flex-1 p-10 bg-gray-50 ml-[25%]">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">🎥 Video Generator</h1>
+  <body class="bg-[#F5F7FF] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed h-screen bg-[#F5F7FF]"></aside>
 
-        <form id="videoForm" class="w-full max-w-2xl space-y-6">
-          <!-- Video Topic Input -->
-          <div>
-            <label class="block text-lg font-medium text-gray-800 mb-2">Enter Video Topic:</label>
-            <div class="flex items-center gap-3">
-              <div class="relative flex-1">
-                <input
-                  type="text"
-                  id="videoTopic"
-                  class="w-full p-3 pr-10 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  placeholder="Type video topic here"
-                />
-                <div id="videoLoader" class="absolute top-1/2 right-3 transform -translate-y-1/2 hidden">
-                  <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                  </svg>
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-block bg-white rounded-full px-4 py-2 mb-4">
+            <span
+              class="text-sm font-medium text-blue-600 flex items-center gap-2"
+            >
+              ✨ AI-Powered Video Creation
+            </span>
+          </div>
+
+          <h1 class="text-4xl font-bold text-slate-800 mb-4">
+            Video Generator
+          </h1>
+
+          <p class="text-slate-600 text-lg">
+            Transform your ideas into engaging videos with AI assistance
+          </p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+          <form id="videoForm" class="space-y-6">
+            <!-- Video Topic -->
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Video Topic</label
+              >
+              <div class="flex gap-3">
+                <div class="relative flex-1">
+                  <input
+                    id="videoTopic"
+                    type="text"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                    placeholder="Type video topic here"
+                  />
+                  <div
+                    id="videoLoader"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 hidden"
+                  >
+                    <div
+                      class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"
+                    ></div>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  id="searchVideoButton"
+                  class="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
               </div>
+            </div>
 
-              <!-- Search Button -->
+            <!-- Video Style -->
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2"
+                >Video Style</label
+              >
+              <input
+                id="videoStyle"
+                type="text"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-slate-800 placeholder-slate-400"
+                placeholder="e.g., Cinematic, Animation, Documentary"
+              />
+            </div>
+
+            <!-- Generate Button -->
+            <div class="flex flex-col items-center pt-4">
               <button
                 type="button"
-                id="searchVideoButton"
-                class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                id="generateVideoButton"
+                class="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-medium transition-colors flex items-center gap-2"
               >
-                🔍
+                <span>Generate Video</span>
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
               </button>
             </div>
-          </div>
-
-          <!-- Video Style -->
-          <div>
-            <label class="block text-lg font-medium text-gray-800 mb-1">Video Style:</label>
-            <input
-              id="videoStyle"
-              type="text"
-              class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Describe video style"
-            />
-          </div>
-
-          <!-- Generate Button -->
-          <div class="flex justify-center">
-            <button
-              type="button"
-              id="generateVideoButton"
-              class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-semibold text-lg"
-            >
-              🎬 Generate Video
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
 
         <!-- Output Section -->
-        <section id="videoOutput" class="hidden mt-12 border-t pt-10">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">📽️ Generated Video</h2>
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <p id="videoDescription" class="mb-4 text-gray-700 text-lg"></p>
-            <video
-              id="generatedVideo"
-              controls
-              class="w-full rounded-lg shadow-lg"
+        <section id="videoOutput" class="mt-8 hidden">
+          <div
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8"
+          >
+            <h2
+              class="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2"
             >
-              <!-- Dynamic source will be injected here via JavaScript -->
-            </video>
+              <svg
+                class="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+              Generated Video
+            </h2>
+            <p id="videoDescription" class="text-slate-600 mb-6"></p>
+            <div class="rounded-xl overflow-hidden border border-slate-200">
+              <video id="generatedVideo" controls class="w-full h-auto">
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
 
     <script>
       // Load sidebar
-      fetch("sidebar.html")
+      fetch("/static/sidebar.html")
         .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("sidebar-container").innerHTML = html;
+        .then((data) => {
+          document.getElementById("sidebar").innerHTML = data;
         });
 
       // DOM elements
@@ -100,44 +174,48 @@
       const videoPlayer = document.getElementById("generatedVideo");
       const description = document.getElementById("videoDescription");
 
-      document.getElementById("generateVideoButton").addEventListener("click", async () => {
-        const topic = document.getElementById("videoTopic").value.trim();
-        const style = document.getElementById("videoStyle").value.trim();
+      document
+        .getElementById("generateVideoButton")
+        .addEventListener("click", async () => {
+          const topic = document.getElementById("videoTopic").value.trim();
+          const style = document.getElementById("videoStyle").value.trim();
 
-        if (!topic) {
-          alert("Please enter a topic.");
-          return;
-        }
-
-        loader.classList.remove("hidden");
-
-        try {
-          // Send JSON to FastAPI
-          const response = await fetch("/generate_video", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ topic, style })
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error("❌ Video generation failed: " + errorText);
+          if (!topic) {
+            alert("Please enter a topic.");
+            return;
           }
 
-          const blob = await response.blob();
-          const videoURL = URL.createObjectURL(blob);
+          loader.classList.remove("hidden");
 
-          videoPlayer.src = videoURL;
-          description.innerText = `Topic: ${topic} | Style: ${style || 'Default'}`;
-          videoOutput.classList.remove("hidden");
-        } catch (error) {
-          alert(error.message);
-        } finally {
-          loader.classList.add("hidden");
-        }
-      });
+          try {
+            // Send JSON to FastAPI
+            const response = await fetch("/generate_video", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ topic, style }),
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error("❌ Video generation failed: " + errorText);
+            }
+
+            const blob = await response.blob();
+            const videoURL = URL.createObjectURL(blob);
+
+            videoPlayer.src = videoURL;
+            description.innerText = `Topic: ${topic} | Style: ${
+              style || "Default"
+            }`;
+            videoOutput.classList.remove("hidden");
+          } catch (error) {
+            alert(error.message);
+          } finally {
+            loader.classList.add("hidden");
+          }
+        });
     </script>
   </body>
 </html>
