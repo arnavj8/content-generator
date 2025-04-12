@@ -15,8 +15,9 @@
   </head>
 
   <body class="bg-[#F5F7FF] min-h-screen flex">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="h-screen bg-[#F5F7FF]"></aside>
+
+      <div id="sidebar" class="w-1/6 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"></div>
+
 
     <!-- Main Content -->
     <main class="flex-1 ml-64 p-8">
@@ -187,16 +188,6 @@
             }
           });
         });
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const sidebar = document.getElementsByClassName("aside");
-          console.log('i am here '+sidebar.classList)
-        // Remove w-1/4 if present
-        sidebar.classList.remove("w-1/4");
-
-        // Ensure w-full is applied
-        sidebar.classList.add("w-full");
-      });
 
       document.addEventListener("click", function (e) {
         if (e.target.id === "generateButton") {
