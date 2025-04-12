@@ -6,11 +6,24 @@ from dotenv import load_dotenv
 from pathlib import Path
 import logging
 from Backend.logger import logging
-# Load environment variables
-load_dotenv()
+from Backend.db_utils import ensure_api_keys
 
-# Hugging Face API Token
-HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+try:
+    # Ensure API keys are available
+    ensure_api_keys()
+    # Use the keys
+    HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    # GEN_API_KEY = os.getenv('GEN_API_KEY')
+    
+    # Your code here...
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
+# Load environment variables
+# load_dotenv()
+
+# # Hugging Face API Token
+# HF_API_TOKEN = os.getenv('HF_API_TOKEN')
 API_URL_MUSICGEN = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
 headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 

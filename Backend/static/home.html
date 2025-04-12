@@ -74,9 +74,10 @@
   <body class="bg-[#F5F7FF] min-h-screen flex">
     <!-- Sidebar -->
     <aside id="sidebar" class="w-64 fixed h-screen"></aside>
-
+    
     <!-- Main Content -->
     <main class="flex-1 ml-64">
+      
       <!-- Removed padding and adjusted margin -->
       <div class="max-w-4xl mx-auto py-8">
         <!-- Header Section -->
@@ -179,7 +180,23 @@
             </p>
           </a>
         </div>
-
+        <!-- Add this at the top of your main content -->
+      <div id="defaultKeysWarning" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
+        <div class="flex items-center">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Using Default API Keys</p>
+                <p class="text-sm">You are currently using default API keys with limited functionality. Please set up your own API keys for full access.</p>
+                <button onclick="showSetupForm()" class="mt-2 text-sm bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600">
+                    Configure API Keys
+                </button>
+            </div>
+        </div>
+      </div>
         <!-- How It Works Section -->
         <section
           class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-12 mt-12"
@@ -199,6 +216,23 @@
               </div>
               <div>
                 <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Setup API Configuration Below
+                </h3>
+                <!-- Added margin-bottom -->
+                <p class="text-slate-600">
+                  Gets API Keys and Save on Your Mongodb
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <!-- Increased size -->
+                <span class="text-blue-600 font-medium">2</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
                   Choose Content Type
                 </h3>
                 <!-- Added margin-bottom -->
@@ -212,7 +246,7 @@
               <div
                 class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
               >
-                <span class="text-blue-600 font-medium">2</span>
+                <span class="text-blue-600 font-medium">3</span>
               </div>
               <div>
                 <h3 class="font-medium text-slate-800 text-lg mb-1">
@@ -228,7 +262,7 @@
               <div
                 class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
               >
-                <span class="text-blue-600 font-medium">3</span>
+                <span class="text-blue-600 font-medium">4</span>
               </div>
               <div>
                 <h3 class="font-medium text-slate-800 text-lg mb-1">
@@ -241,6 +275,114 @@
             </div>
           </div>
         </section>
+<!-- API Setup Section -->
+<section class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-12">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6">API Configuration</h2>
+  
+  <div class="mb-8 space-y-4">
+    <div class="bg-blue-50 rounded-lg p-4">
+        <h3 class="font-medium text-blue-800 mb-2">How to Get Your API Keys</h3>
+        <div class="space-y-4">
+            <!-- MongoDB URI -->
+            <div>
+                <p class="text-blue-700 font-medium">MongoDB URI:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Visit <a href="https://cloud.mongodb.com" class="underline" target="_blank">MongoDB Atlas</a></li>
+                    <li>Create a free account or sign in</li>
+                    <li>Create a new cluster (free tier available)</li>
+                    <li>Click "Connect" on your cluster</li>
+                    <li>Choose "Connect your application"</li>
+                    <li>Copy the connection string</li>
+                    <li>Replace <span class="bg-blue-100 px-1 rounded">&lt;password&gt;</span> with your database password</li>
+                </ol>
+                <div class="mt-2 bg-blue-100 p-3 rounded-lg">
+                    <p class="text-sm text-blue-700">Example URI format:</p>
+                    <code class="text-xs text-blue-800 block mt-1">
+                        mongodb+srv://username:password@cluster.xxxxx.mongodb.net/database?retryWrites=true&w=majority
+                    </code>
+                </div>
+            </div>
+
+            <!-- Gemini API Key -->
+            <div>
+                <p class="text-blue-700 font-medium">Gemini API Key:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Visit <a href="https://makersuite.google.com/app/apikey" class="underline" target="_blank">Google AI Studio</a></li>
+                    <li>Sign in with your Google account</li>
+                    <li>Click "Create API key" button</li>
+                    <li>Copy your new API key</li>
+                </ol>
+                <p class="text-xs text-blue-600 mt-1 ml-2">Note: Keep your API key secure and never share it publicly</p>
+            </div>
+
+            <!-- HuggingFace API Key -->
+            <div>
+                <p class="text-blue-700 font-medium">HuggingFace API Key:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Go to <a href="https://huggingface.co/settings/tokens" class="underline" target="_blank">HuggingFace Tokens</a></li>
+                    <li>Sign in to your account (create one if needed)</li>
+                    <li>Click "New token" button</li>
+                    <li>Give your token a name and select permissions</li>
+                    <li>Copy your new token (starts with 'hf_')</li>
+                </ol>
+                <p class="text-xs text-blue-600 mt-1 ml-2">Note: Save your token immediately as it won't be shown again</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- API Keys Form -->
+  <div id="setupForm" class="space-y-6">
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">MongoDB URI</label>
+          <input 
+              type="password" 
+              id="mongoUri"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter MongoDB URI"
+              onblur="validateMongoUri()"
+          />
+          <span id="mongoUriError" class="text-xs text-red-500 mt-1 block"></span>
+          <p class="mt-1 text-xs text-slate-500">Format: mongodb://username:password@host:port/database</p>
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">Gemini API Key</label>
+          <input 
+              type="password" 
+              id="geminiKey"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter Gemini API Key"
+              onblur="validateGeminiKey()"
+          />
+          <span id="geminiKeyError" class="text-xs text-red-500 mt-1 block"></span>
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">HuggingFace API Key</label>
+          <input 
+              type="password" 
+              id="huggingfaceKey"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter HuggingFace API Key"
+              onblur="validateHuggingFaceKey()"
+          />
+          <span id="huggingfaceKeyError" class="text-xs text-red-500 mt-1 block"></span>
+      </div>
+
+      <button 
+          onclick="saveConfig()"
+          id="saveButton"
+          class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 disabled:bg-slate-300 disabled:cursor-not-allowed"
+          disabled
+      >
+          Save Configuration
+      </button>
+      <div id="setupStatus" class="text-sm text-center"></div>
+  </div>
+</section>
+      
+     
         <!-- Footer -->
         <footer
           class="text-center text-slate-600 py-8 border-t border-slate-200"
@@ -253,26 +395,7 @@
         </footer>
       </div>
     </main>
-    <!-- Chat Button -->
-    <!-- <button
-      id="chat-button"
-      class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-blue-700 focus:outline-none z-50"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-        />
-      </svg>
-    </button> -->
+
     <div
     id="robot-helper"
     class="fixed bottom-6 right-6 z-50 flex flex-col items-center animate-fade-in cursor-pointer"
@@ -379,6 +502,155 @@
         });
 
       window.addEventListener("DOMContentLoaded", () => feather.replace());
+
+async function checkApiKeys() {
+  try {
+      const response = await fetch('/api/check-keys');
+      const data = await response.json();
+      
+      if (data.using_default_keys) {
+          document.getElementById('defaultKeysWarning').classList.remove('hidden');
+      }
+  } catch (error) {
+      console.error('Error checking API keys:', error);
+  }
+}
+
+function showSetupForm() {
+  // Show your API setup form
+  document.getElementById('setupForm').classList.remove('hidden');
+  // Scroll to setup form
+  document.getElementById('setupForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Check API keys status when page loads
+document.addEventListener('DOMContentLoaded', checkApiKeys);
+
+      // Validation patterns
+      const patterns = {
+          mongoUri: /^mongodb(?:\+srv)?:\/\/[^\s]+$/,
+          geminiKey: /^[A-Za-z0-9-_]{39}$/, 
+          huggingfaceKey: /^hf_[A-Za-z0-9]{34}$/
+      };
+      
+      let validations = {
+          mongoUri: false,
+          geminiKey: false,
+          huggingfaceKey: false
+      };
+      
+      function updateSaveButton() {
+          const saveButton = document.getElementById('saveButton');
+          saveButton.disabled = !Object.values(validations).every(v => v);
+      }
+      
+      function validateMongoUri() {
+          const uri = document.getElementById('mongoUri').value.trim();
+          const errorSpan = document.getElementById('mongoUriError');
+          
+          if (!uri) {
+              errorSpan.textContent = 'MongoDB URI is required';
+              validations.mongoUri = false;
+          } else if (!patterns.mongoUri.test(uri)) {
+              errorSpan.textContent = 'Invalid MongoDB URI format';
+              validations.mongoUri = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.mongoUri = true;
+          }
+          updateSaveButton();
+      }
+      
+      function validateGeminiKey() {
+          const key = document.getElementById('geminiKey').value.trim();
+          const errorSpan = document.getElementById('geminiKeyError');
+          
+          if (!key) {
+              errorSpan.textContent = 'Gemini API key is required';
+              validations.geminiKey = false;
+          } else if (!patterns.geminiKey.test(key)) {
+              errorSpan.textContent = 'Invalid Gemini API key format';
+              validations.geminiKey = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.geminiKey = true;
+          }
+          updateSaveButton();
+      }
+      
+      function validateHuggingFaceKey() {
+          const key = document.getElementById('huggingfaceKey').value.trim();
+          const errorSpan = document.getElementById('huggingfaceKeyError');
+          
+          if (!key) {
+              errorSpan.textContent = 'HuggingFace API key is required';
+              validations.huggingfaceKey = false;
+          } else if (!patterns.huggingfaceKey.test(key)) {
+              errorSpan.textContent = 'Invalid HuggingFace API key format';
+              validations.huggingfaceKey = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.huggingfaceKey = true;
+          }
+          updateSaveButton();
+      }
+      
+      async function saveConfig() {
+          const mongoUri = document.getElementById('mongoUri').value.trim();
+          const geminiKey = document.getElementById('geminiKey').value.trim();
+          const huggingfaceKey = document.getElementById('huggingfaceKey').value.trim();
+          const statusDiv = document.getElementById('setupStatus');
+          const saveButton = document.getElementById('saveButton');
+      
+          // Final validation check
+          if (!mongoUri || !geminiKey || !huggingfaceKey) {
+              showStatus('Please fill in all fields', 'text-red-500');
+              return;
+          }
+      
+          try {
+              saveButton.disabled = true;
+              saveButton.textContent = 'Saving...';
+      
+              const response = await fetch('/api/setup', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      mongo_uri: mongoUri,
+                      gemini_key: geminiKey,
+                      huggingface_key: huggingfaceKey
+                  })
+              });
+      
+              const data = await response.json();
+      
+              if (response.ok) {
+                  showStatus('Configuration saved successfully! Reloading...', 'text-green-500');
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 1500);
+              } else {
+                  throw new Error(data.detail || 'Failed to save configuration');
+              }
+          } catch (error) {
+              showStatus(error.message, 'text-red-500');
+              saveButton.disabled = false;
+              saveButton.textContent = 'Save Configuration';
+          }
+      }
+      
+      function showStatus(message, colorClass) {
+          const statusDiv = document.getElementById('setupStatus');
+          statusDiv.textContent = message;
+          statusDiv.className = `mt-2 text-sm ${colorClass} text-center`;
+      }
+      
+      // Add input event listeners
+      document.getElementById('mongoUri').addEventListener('input', validateMongoUri);
+      document.getElementById('geminiKey').addEventListener('input', validateGeminiKey);
+      document.getElementById('huggingfaceKey').addEventListener('input', validateHuggingFaceKey);
 
 </script>
 

@@ -15,9 +15,10 @@
   </head>
 
   <body class="bg-[#F5F7FF] min-h-screen flex">
-
-      <div id="sidebar" class="w-1/6 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"></div>
-
+    <div
+      id="sidebar"
+      class="w-1/6 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"
+    ></div>
 
     <!-- Main Content -->
     <main class="flex-1 ml-64 p-8">
@@ -189,8 +190,9 @@
           });
         });
 
-      document.addEventListener("click", function (e) {
-        if (e.target.id === "generateButton") {
+      document
+        .getElementById("generateButton")
+        .addEventListener("click", function (e) {
           const topic = document.getElementById("topicInput").value.trim();
           const style = document.getElementById("styleInput").value.trim();
           const loader = document.getElementById("loader");
@@ -231,8 +233,7 @@
               loader.classList.add("hidden");
               console.error(err);
             });
-        }
-      });
+        });
     </script>
   </body>
 </html>

@@ -6,12 +6,18 @@ import base64
 from dotenv import load_dotenv
 import google.generativeai as genai
 from Backend.logger import logging  
+from Backend.db_utils import ensure_api_keys
+
+try:
+    ensure_api_keys()
+except Exception as e:
+    logging.error(f"Error ensuring API keys: {str(e)}")
+    # Set default keys as last resort
 
 load_dotenv()
-
-# API keys
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-GEMINI_API_KEY = os.getenv("GEN_API_KEY")
+# Use the environment variables
+HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+GEMINI_API_KEY = os.getenv('GEN_API_KEY')
 
 # Configure Gemini
 genai.configure(api_key=GEMINI_API_KEY)

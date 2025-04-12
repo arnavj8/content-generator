@@ -14,9 +14,21 @@ import logging
 import threading
 from Backend.logger import logging
 from dotenv import load_dotenv
+from Backend.db_utils import ensure_api_keys
+try:
+    # Ensure API keys are available
+    ensure_api_keys()
+    
+    # Use the keys
+    # HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    GEMINI_API_KEY = os.getenv('GEN_API_KEY')
+    
 
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GEN_API_KEY")
+# GEMINI_API_KEY = os.getenv("GEN_API_KEY")
 GITHUB_REPO_URL = os.getenv("GITHUB_REPO_URL")
 
 class KnowledgeBase:
