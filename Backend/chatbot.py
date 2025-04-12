@@ -215,7 +215,7 @@ class KnowledgeBase:
 
                 1. Greeting Handling:
                 - If the user sends a greeting (hello, hi, hey), respond warmly and offer assistance
-                - Mention that you're an AI assistant for the project's code repository
+                - Mention that you're an AI assistant for the project's code repository only on greetings
 
                 2. Question Answering:
                 - Use ONLY the provided context to formulate your responses

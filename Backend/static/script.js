@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chat-messages');
     const statusMessage = document.getElementById('status-message');
     // const statusDisplay = document.getElementById('status-display');
+    // const chatButton = document.getElementById("chat-button");
+    const clickSound = document.getElementById("click-sound");
+    const typingSound = document.getElementById("typing-sound");
+    const botSound = document.getElementById("bot-sound");
+    clickSound.volume = 0.7;
+    typingSound.volume = 0.1;
+    // botSound.volume = 0.3;
     initializeKnowledgeBase();
 
     let checkStatusInterval;
@@ -96,12 +103,44 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!chatContainer.classList.contains('hidden')) {
             userInput.focus();
         }
+        clickSound.currentTime = 0; // rewind to start
+        clickSound.play().catch((err) => {
+        console.error("Sound play failed:", err);
+        if (botSound) {
+              botSound.currentTime = 0;
+              botSound.play();
+            }
+        });
+        
+
     });
     
     closeChat.addEventListener('click', () => {
+        if (clickSound) {
+                  clickSound.currentTime = 0;
+                  clickSound.play();
+                }
+        
+                if (typingSound) {
+                  typingSound.pause();
+                  typingSound.currentTime = 0;
+                }
         chatContainer.classList.add('hidden');
+
     });
+    function playTyping() {
+        if (typingSound) {
+          typingSound.currentTime = 0;
+          typingSound.play().catch((e) => console.warn("Typing sound failed:", e));
+        }
+      }
     
+      function stopTyping() {
+        if (typingSound) {
+          typingSound.pause();
+          typingSound.currentTime = 0;
+   }
+    }
     function addMessageToChat(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start mb-4 ${sender === 'user' ? 'justify-end' : ''}`;
@@ -140,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.appendChild(typingDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
         
+        playTyping();
         fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -154,8 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const indicator = document.getElementById('typing-indicator');
             if (indicator) indicator.remove();
+            stopTyping()
             
             if (data.response) {
+                // playTyping()
                 addMessageToChat(data.response, 'bot');
             } else {
                 addMessageToChat('Received empty response from server.', 'bot');
@@ -183,11 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// // Add this to your script.js
-// const toggleSidebar = () => {
-//     const sidebar = document.querySelector('aside');
-//     sidebar.classList.toggle('-translate-x-full');
-// }
+// Add this to your script.js
+const toggleSidebar = () => {
+    const sidebar = document.querySelector('aside');
+    sidebar.classList.toggle('-translate-x-full');
+}
 
 // Add a button for mobile menu toggle
 const addMobileMenuButton = () => {
@@ -207,66 +249,28 @@ if (window.innerWidth < 1024) {
     addMobileMenuButton();
 }
 
-// Add this to your script.js or create a new api-client.js
-const ApiClient = {
-    checkKeys() {
-        if (!ApiKeyManager.hasValidKeys()) {
-            throw new Error('Please enter your API keys in the sidebar before generating content.');
-        }
-    },
+// ################### API KEYS HANDLGIN ###########################
 
-    async makeApiCall(endpoint, data) {
-        this.checkKeys();
-        
-        const keys = ApiKeyManager.loadKeys();
-        
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Gemini-Key': keys.gemini,
-                'X-Huggingface-Key': keys.huggingface
-            },
-            body: JSON.stringify(data)
-        });
+// Function to save API keys to localStorage
+function saveAPIKeys(geminiKey, huggingfaceKey) {
+    localStorage.setItem('geminiApiKey', geminiKey);
+    localStorage.setItem('huggingfaceApiKey', huggingfaceKey);
+}
 
-        if (!response.ok) {
-            throw new Error('API call failed. Please check your API keys.');
-        }
+// Function to load API keys from localStorage
+function loadAPIKeys() {
+    const geminiKey = localStorage.getItem('geminiApiKey') || '';
+    const huggingfaceKey = localStorage.getItem('huggingfaceApiKey') || '';
+    
+    // Set the input values
+    document.getElementById('geminiApiKey').value = geminiKey;
+    document.getElementById('huggingfaceApiKey').value = huggingfaceKey;
+}
 
-        return await response.json();
-    }
-};
-
-// Example usage in blog generation
-document.getElementById('generateButton').addEventListener('click', async () => {
-    try {
-        // Check for API keys first
-        ApiClient.checkKeys();
-
-        const topic = document.getElementById('topicInput').value.trim();
-        const style = document.getElementById('styleInput').value.trim();
-
-        if (!topic || !style) {
-            alert('Please fill in all fields');
-            return;
-        }
-
-        // Show loader
-        document.getElementById('loader').classList.remove('hidden');
-
-        const result = await ApiClient.makeApiCall('/generate_blog', {
-            topic: topic,
-            style: style
-        });
-
-        // Handle successful generation
-        document.getElementById('blogOutput').innerHTML = result.content;
-        document.getElementById('section5').classList.remove('hidden');
-
-    } catch (error) {
-        alert(error.message);
-    } finally {
-        document.getElementById('loader').classList.add('hidden');
-    }
-});
+// Function to handle API key changes
+function handleAPIKeyChange() {
+    const geminiInput = document.getElementById('geminiApiKey');
+    const huggingfaceInput = document.getElementById('huggingfaceApiKey');
+    
+    saveAPIKeys(geminiInput.value, huggingfaceInput.value);
+}

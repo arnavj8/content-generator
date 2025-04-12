@@ -1,119 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Content Generator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .card {
-      transition: all 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 25px 35px -10px rgba(0,0,0,0.15);
-    }
-    .icon:hover {
-      transform: scale(1.15);
-      transition: transform 0.2s ease;
-    }
-  </style>
-</head>
-<body class="bg-gray-400 min-h-screen flex font-sans">
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌟 Content Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+  </head>
+  <body class="bg-gray-500 min-h-screen flex flex-col text-white">
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <div
+        id="sidebar-container"
+        class="w-1/4 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"
+      ></div>
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="w-72 bg-white shadow-lg border-r border-gray-200"></aside>
+      <!-- Main Content -->
+      <main class="flex-1 w-full lg:ml-[25%] px-4 sm:px-10 py-12">
+        <div class="max-w-4xl mx-auto">
+          <div
+            class="bg-white shadow-2xl border border-gray-200 rounded-3xl px-8 sm:px-12 py-12 space-y-8 text-gray-800"
+          >
+            <section>
+              <h1
+                class="text-5xl font-extrabold text-center mb-12 text-gray-800 drop-shadow-md"
+              >
+                🤖 Content Generator
+              </h1>
+              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <i data-feather="zap" class="text-rose-500 w-5 h-5"></i> What It
+                Does
+              </h2>
+              <p class="text-gray-700 text-base">
+                Turn ideas into polished content—faster than ever.
+              </p>
+            </section>
 
-  <!-- Main Content -->
-  <main class="flex-1 p-10 overflow-y-auto">
-    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-2xl space-y-10 card">
+            <section>
+              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <i data-feather="star" class="text-yellow-500 w-5 h-5"></i>
+                Features
+              </h2>
+              <ul
+                class="list-disc list-inside text-gray-700 text-base space-y-1"
+              >
+                <li>Fast AI-powered output</li>
+                <li>Multiple tones & formats</li>
+                <li>One-click copy</li>
+              </ul>
+            </section>
 
-      <!-- Header -->
-      <div class="text-center space-y-4">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 flex justify-center items-center gap-3">
-          <i data-feather="cpu" class="w-8 h-8 text-rose-600 icon"></i> Content Generator
-        </h1>
-        <p class="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-          Unleash the power of AI to craft compelling, high-quality content in just a few clicks. Whether you're building blogs, captions, or marketing copy—our smart generator delivers ideas that resonate, instantly. 💡
-        </p>
-      </div>
+            <section>
+              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <i data-feather="book-open" class="text-green-600 w-5 h-5"></i>
+                Quick Guide
+              </h2>
+              <ol
+                class="list-decimal list-inside text-gray-700 text-base space-y-1"
+              >
+                <li>Pick a content type</li>
+                <li>Enter a prompt</li>
+                <li>Click generate</li>
+              </ol>
+            </section>
 
-      <hr class="border-gray-200" />
+            <section>
+              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <i data-feather="info" class="text-amber-500 w-5 h-5"></i> Tips
+              </h2>
+              <ul
+                class="list-disc list-inside text-gray-700 text-base space-y-1"
+              >
+                <li>Keep prompts short</li>
+                <li>Try different tones</li>
+              </ul>
+            </section>
 
-      <!-- What It Does -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="zap" class="text-rose-500 w-6 h-6 icon"></i> What It Does
-        </h2>
-        <p class="text-gray-700 text-base mt-2 leading-relaxed">
-          Turn ideas into polished content—faster than ever. Our generator supports everything from blog intros to social media hooks, helping you go from prompt to publish-ready in seconds. Powered by advanced natural language AI.
-        </p>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Features -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="star" class="text-yellow-500 w-6 h-6 icon"></i> Features
-        </h2>
-        <ul class="list-disc list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Lightning-fast AI-powered output</li>
-          <li>Choose from multiple tones and content formats</li>
-          <li>Seamless one-click copy for hassle-free usage</li>
-          <li>Responsive and intuitive interface</li>
-        </ul>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Quick Guide -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="book-open" class="text-green-600 w-6 h-6 icon"></i> Quick Guide
-        </h2>
-        <ol class="list-decimal list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Pick the type of content you'd like to generate</li>
-          <li>Enter a prompt, topic, or idea</li>
-          <li>Hit "Generate" and watch the AI work its magic</li>
-        </ol>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Tips -->
-      <section>
-        <h2 class="flex items-center text-2xl font-semibold text-gray-800 gap-3">
-          <i data-feather="info" class="text-amber-500 w-6 h-6 icon"></i> Tips
-        </h2>
-        <ul class="list-disc list-inside text-gray-700 text-base mt-2 space-y-1">
-          <li>Keep your prompts clear and concise for best results</li>
-          <li>Try out different tones—formal, casual, witty, or persuasive</li>
-          <li>Review and tweak output to match your brand’s voice</li>
-        </ul>
-      </section>
-
-      <hr class="border-gray-200" />
-
-      <!-- Footer -->
-      <footer class="pt-4 text-center text-sm text-gray-500">
-        © 2025 <span class="font-medium text-gray-700">Gaurav</span> & <span class="font-medium text-gray-700">Arnav</span> • Built with ❤️
-      </footer>
-
+            <footer class="pt-6 text-center text-sm text-gray-600">
+              © 2025 <span class="font-medium text-gray-700">Gaurav</span> &
+              <span class="font-medium text-gray-700">Arnav</span> • Built with
+              ❤️
+            </footer>
+          </div>
+        </div>
+      </main>
     </div>
-  </main>
 
-  <!-- Sidebar + Feather Icons -->
-  <script>
-    fetch("sidebar.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("sidebar").innerHTML = data;
-        feather.replace();
+    <!-- Chatbot -->
+    <div
+      id="robot-helper"
+      class="fixed bottom-6 right-6 z-50 flex flex-col items-center animate-fade-in cursor-pointer"
+    >
+      <div
+        class="bg-white text-gray-800 px-3 py-1.5 rounded-lg shadow text-sm font-medium mb-2 relative"
+      >
+        Need help? Click me!
+        <div
+          class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow"
+        ></div>
+      </div>
+      <img
+        id="chat-button"
+        src="static/robot.png"
+        alt="Chatbot"
+        class="w-24 h-auto hover:scale-105 transition-transform duration-300"
+      />
+    </div>
+
+    <div
+      id="chat-container"
+      class="chat-container hidden fixed bottom-24 right-6 w-[360px] sm:w-[400px] h-[420px] bg-white rounded-lg shadow-2xl overflow-hidden z-50"
+    >
+      <div
+        class="bg-blue-600 text-white px-4 py-2 flex justify-between items-center"
+      >
+        <h3 class="font-medium text-sm">AI Assistant</h3>
+        <button
+          id="close-chat"
+          class="focus:outline-none text-white hover:text-gray-200 text-sm"
+        >
+          ✕
+        </button>
+      </div>
+      <div
+        id="chat-messages"
+        class="p-3 h-[calc(100%-120px)] overflow-y-auto bg-gray-50 space-y-2 text-sm"
+      ></div>
+      <div class="border-t border-gray-200 p-3 bg-white">
+        <div class="flex items-center gap-2">
+          <input
+            id="user-input"
+            type="text"
+            placeholder="Ask something..."
+            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled
+          />
+          <button
+            id="send-button"
+            class="bg-blue-600 text-white rounded-md px-3 py-2 text-sm hover:bg-blue-700 focus:outline-none disabled:opacity-50"
+            disabled
+          >
+            ➤
+          </button>
+        </div>
+        <div id="status-message" class="text-xs text-gray-500 mt-2"></div>
+      </div>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="click-sound" src="static/click.mp3" preload="auto"></audio>
+    <audio
+      id="typing-sound"
+      src="static/typing.mp3"
+      preload="auto"
+      loop
+    ></audio>
+    <audio id="bot-sound" src="static/bot.mp3" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script>
+      feather.replace();
+
+      // Load sidebar
+      fetch("/static/sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebarContainer = document.getElementById("sidebar-container");
+          sidebarContainer.innerHTML = html;
+
+          const links = sidebarContainer.querySelectorAll("a");
+          links.forEach((link) => {
+            link.classList.remove(
+              "bg-blue-100",
+              "bg-blue-200",
+              "bg-blue-500",
+              "text-white",
+              "ring",
+              "ring-offset-2"
+            );
+            if (link.href === window.location.href) {
+              link.classList.add("font-bold", "text-blue-600");
+            }
+          });
+        });
+
+
+  feather.replace();
+
+  const clickSound = document.getElementById("click-sound");
+  const typingSound = document.getElementById("typing-sound");
+  const botSound = document.getElementById("bot-sound");
+
+  // Play sound with user interaction
+  document.getElementById("chat-button").addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    botSound.currentTime = 0;
+    botSound.play();
+
+    document.getElementById("chat-container").classList.remove("hidden");
+  });
+
+  document.getElementById("close-chat").addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+    typingSound.pause();
+    typingSound.currentTime = 0;
+    document.getElementById("chat-container").classList.add("hidden");
+  });
+
+  // Load sidebar
+  fetch("/static/sidebar.html")
+    .then((res) => res.text())
+    .then((html) => {
+      const sidebarContainer = document.getElementById("sidebar-container");
+      sidebarContainer.innerHTML = html;
+
+      const links = sidebarContainer.querySelectorAll("a");
+      links.forEach((link) => {
+        link.classList.remove(
+          "bg-blue-100",
+          "bg-blue-200",
+          "bg-blue-500",
+          "text-white",
+          "ring",
+          "ring-offset-2"
+        );
+        if (link.href === window.location.href) {
+          link.classList.add("font-bold", "text-blue-600");
+        }
       });
-
-    window.addEventListener("DOMContentLoaded", () => feather.replace());
-  </script>
-</body>
+    });
+</script>
+    </script>
+    <script src="static/script.js"></script>
+  </body>
 </html>
