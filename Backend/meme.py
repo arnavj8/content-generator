@@ -11,19 +11,21 @@ from Backend.db_utils import ensure_api_keys
 
 try:
     ensure_api_keys()
-except Exception as e:
-    logging.error(f"Error ensuring API keys: {str(e)}")
+
     # Set default keys as last resort
 
 # Use the environment variables
-HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-GEN_API_KEY = os.getenv('GEN_API_KEY')
+    HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    GEN_API_KEY = os.getenv('GEN_API_KEY')
 
-logging.info(f"API keys loaded - HF: {'Set' if HF_API_TOKEN else 'Not set'}, Gemini: {'Set' if GEN_API_KEY else 'Not set'}")
-load_dotenv()
+    logging.info(f"API keys loaded - HF: {'Set' if HF_API_TOKEN else 'Not set'}, Gemini: {'Set' if GEN_API_KEY else 'Not set'}")
 
-GEN_API_KEY = os.getenv("GEN_API_KEY")
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
+except Exception as e:
+    logging.error(f"Error ensuring API keys: {str(e)}")
+# load_dotenv()
+
+# GEN_API_KEY = os.getenv("GEN_API_KEY")
+# HF_API_TOKEN = os.getenv("HF_API_TOKEN")
 
 def generate_meme_content(prompt, emotion, language="english"):
     """Generate meme caption, image prompt, font style, text color, and position using Gemini API."""

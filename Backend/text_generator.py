@@ -14,30 +14,27 @@ try:
     # Use the keys
     # HF_API_TOKEN = os.getenv('HF_API_TOKEN')
     GEN_API_KEY = os.getenv('GEN_API_KEY')
-    
-    # Your code here...
-    
-except Exception as e:
-    logging.error(f"Error: {str(e)}")
+
 # # Load environment variables
 # load_dotenv()
 
 # # Get the API key for Google Generative AI
 # GEN_API_KEY = os.getenv('GEN_API_KEY')
 
-if not GEN_API_KEY:
-    logging.error("GEN_API_KEY not found in environment variables.")
-else:
-    logging.info("GEN_API_KEY loaded successfully.")
+    if not GEN_API_KEY:
+        logging.error("GEN_API_KEY not found in environment variables.")
+    else:
+        logging.info("GEN_API_KEY loaded successfully.")
 
-try:
-    logging.info("Configuring the generative AI API...")
-    genai.configure(api_key=GEN_API_KEY)
-    logging.info("Generative AI API configured successfully.")
+    try:
+        logging.info("Configuring the generative AI API...")
+        genai.configure(api_key=GEN_API_KEY)
+        logging.info("Generative AI API configured successfully.")
+    except Exception as e:
+        logging.error(f"Error while configuring Generative AI API: {e}")
+        raise
 except Exception as e:
-    logging.error(f"Error while configuring Generative AI API: {e}")
-    raise
-
+    logging.error(f"Error: {str(e)}")
 def generate_video_script(topic, style):
     logging.info(f"Generating video script for topic: '{topic}' with style: '{style}'")
 

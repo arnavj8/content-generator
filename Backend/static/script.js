@@ -179,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.appendChild(typingDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
         
-        playTyping();
         fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -192,9 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            playTyping();
             const indicator = document.getElementById('typing-indicator');
             if (indicator) indicator.remove();
-            stopTyping()
             
             if (data.response) {
                 // playTyping()
@@ -202,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 addMessageToChat('Received empty response from server.', 'bot');
             }
+            stopTyping()
         })
         .catch(error => {
             console.error('Error:', error);
