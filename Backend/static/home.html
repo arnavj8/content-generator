@@ -1,189 +1,661 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🌟 Content Generator</title>
+    <title>CreativeNexus AI </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        transition: all 0.3s ease;
+      }
+
+      .feature-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
+      .chat-message {
+        max-width: 80%;
+        word-wrap: break-word;
+      }
+      .typing-indicator span {
+        animation: blink 1s infinite;
+      }
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 0.2;
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.2;
+        }
+      }
+      .chat-container {
+        transition: all 0.3s ease-in-out;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      code {
+        background-color: #f0f0f0;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+    </style>
+
   </head>
-  <body class="bg-gray-400 min-h-screen flex flex-col text-white">
-    <div class="flex flex-1">
-      <!-- Sidebar -->
-      <div
-        id="sidebar-container"
-        class="w-1/4 h-screen fixed top-0 left-0 z-10 hidden lg:block bg-white/80 shadow-xl backdrop-blur-md"
-      ></div>
-
-      <!-- Main Content -->
-      <main class="flex-1 w-full lg:ml-[25%] px-4 sm:px-10 py-12">
-        <div class="max-w-4xl mx-auto">
-          <div
-            class="bg-white shadow-2xl border border-gray-200 rounded-3xl px-8 sm:px-12 py-12 space-y-8 text-gray-800"
-          >
-            <section>
-              <h1
-                class="text-5xl font-extrabold text-center mb-12 text-gray-800 drop-shadow-md"
-              >
-                🤖 Content Generator
-              </h1>
-              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
-                <i data-feather="zap" class="text-rose-500 w-5 h-5"></i> What It
-                Does
-              </h2>
-              <p class="text-gray-700 text-base">
-                Turn ideas into polished content—faster than ever.
-              </p>
-            </section>
-
-            <section>
-              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
-                <i data-feather="star" class="text-yellow-500 w-5 h-5"></i>
-                Features
-              </h2>
-              <ul
-                class="list-disc list-inside text-gray-700 text-base space-y-1"
-              >
-                <li>Fast AI-powered output</li>
-                <li>Multiple tones & formats</li>
-                <li>One-click copy</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
-                <i data-feather="book-open" class="text-green-600 w-5 h-5"></i>
-                Quick Guide
-              </h2>
-              <ol
-                class="list-decimal list-inside text-gray-700 text-base space-y-1"
-              >
-                <li>Pick a content type</li>
-                <li>Enter a prompt</li>
-                <li>Click generate</li>
-              </ol>
-            </section>
-
-            <section>
-              <h2 class="text-2xl font-bold mb-2 flex items-center gap-2">
-                <i data-feather="info" class="text-amber-500 w-5 h-5"></i> Tips
-              </h2>
-              <ul
-                class="list-disc list-inside text-gray-700 text-base space-y-1"
-              >
-                <li>Keep prompts short</li>
-                <li>Try different tones</li>
-              </ul>
-            </section>
-
-            <footer class="pt-6 text-center text-sm text-gray-600">
-              © 2025 <span class="font-medium text-gray-700">Gaurav</span> &
-              <span class="font-medium text-gray-700">Arnav</span> • Built with
-              ❤️
-            </footer>
+  <body class="bg-[#F5F7FF] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 fixed h-screen"></aside>
+    
+    <!-- Main Content -->
+    <main class="flex-1 ml-64">
+      
+      <!-- Removed padding and adjusted margin -->
+      <div class="max-w-4xl mx-auto py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <div class="inline-block bg-white rounded-full px-4 py-2 mb-4">
+            <span
+              class="text-sm font-medium text-blue-600 flex items-center gap-2"
+            >
+              ✨ AI-Powered Content Creation
+            </span>
           </div>
+
+          <h1 class="text-4xl font-bold text-blue-600 mb-4">
+            CreativeNexus AI 
+          </h1>
+
+          <p class="text-slate-600 text-lg">
+            Transform your ideas into compelling content with our AI-powered
+            platform.<br />
+            Create blogs, images, videos, and memes in minutes.
+          </p>
         </div>
-      </main>
-    </div>
 
-    <!-- Chatbot -->
-    <div
-      id="robot-helper"
-      class="fixed bottom-6 right-6 z-50 flex flex-col items-center animate-fade-in cursor-pointer"
-    >
-      <div
-        class="bg-white text-gray-800 px-3 py-1.5 rounded-lg shadow text-sm font-medium mb-2 relative"
-      >
-        Need help? Click me!
-        <div
-          class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow"
-        ></div>
+        <!-- Features Grid -->
+        <div class="grid md:grid-cols-2 gap-6 mb-12">
+          <!-- Added margin-bottom -->
+          <!-- Blog Generation -->
+          <a
+            href="/static/blog_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="edit-3" class="w-6 h-6 text-blue-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Blog Generation
+            </h3>
+            <p class="text-slate-600">
+              Create engaging blog posts with AI assistance. Perfect for content
+              creators and marketers.
+            </p>
+          </a>
+
+          <!-- Image Creation -->
+          <a
+            href="/static/image_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="image" class="w-6 h-6 text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Image Creation
+            </h3>
+            <p class="text-slate-600">
+              Generate unique images from text descriptions. Ideal for social
+              media and marketing.
+            </p>
+          </a>
+
+          <!-- Video Generation -->
+          <a
+            href="/static/video_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="video" class="w-6 h-6 text-rose-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Video Generation
+            </h3>
+            <p class="text-slate-600">
+              Create compelling video content with AI-powered tools and
+              templates.
+            </p>
+          </a>
+
+          <!-- Meme Creator -->
+          <a
+            href="/static/meme_generator.html"
+            class="bg-white p-6 rounded-xl hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            <div
+              class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4"
+            >
+              <i data-feather="smile" class="w-6 h-6 text-amber-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">
+              Meme Creator
+            </h3>
+            <p class="text-slate-600">
+              Generate viral-worthy memes instantly with our AI-powered meme
+              generator.
+            </p>
+          </a>
+        </div>
+        <!-- Add this at the top of your main content -->
+      <div id="defaultKeysWarning" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
+        <div class="flex items-center">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">Using Default API Keys</p>
+                <p class="text-sm">You are currently using default API keys with limited functionality. Please set up your own API keys for full access.</p>
+                <button onclick="showSetupForm()" class="mt-2 text-sm bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600">
+                    Configure API Keys
+                </button>
+            </div>
+        </div>
       </div>
-      <img
-        id="chat-button"
-        src="static/robot.png"
-        alt="Chatbot"
-        class="w-24 h-auto hover:scale-105 transition-transform duration-300"
-      />
-    </div>
+        <!-- How It Works Section -->
+        <section
+          class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-12 mt-12"
+        >
+          <!-- Added margin-top -->
+          <h2 class="text-2xl font-semibold text-slate-800 mb-6">
+            How It Works
+          </h2>
+          <div class="space-y-6">
+            <!-- Increased spacing between items -->
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <!-- Increased size -->
+                <span class="text-blue-600 font-medium">1</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Setup API Configuration Below
+                </h3>
+                <!-- Added margin-bottom -->
+                <p class="text-slate-600">
+                  Gets API Keys and Save on Your Mongodb
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <!-- Increased size -->
+                <span class="text-blue-600 font-medium">2</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Choose Content Type
+                </h3>
+                <!-- Added margin-bottom -->
+                <p class="text-slate-600">
+                  Select the type of content you want to generate
+                </p>
+              </div>
+            </div>
 
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-blue-600 font-medium">3</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Enter Description
+                </h3>
+                <p class="text-slate-600">
+                  Provide details about what you want to create
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div
+                class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-blue-600 font-medium">4</span>
+              </div>
+              <div>
+                <h3 class="font-medium text-slate-800 text-lg mb-1">
+                  Generate & Edit
+                </h3>
+                <p class="text-slate-600">
+                  Review, edit, and perfect your generated content
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+<!-- API Setup Section -->
+<section class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-12">
+  <h2 class="text-2xl font-semibold text-slate-800 mb-6">API Configuration</h2>
+  
+  <div class="mb-8 space-y-4">
+    <div class="bg-blue-50 rounded-lg p-4">
+        <h3 class="font-medium text-blue-800 mb-2">How to Get Your API Keys</h3>
+        <div class="space-y-4">
+            <!-- MongoDB URI -->
+            <div>
+                <p class="text-blue-700 font-medium">MongoDB URI:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Visit <a href="https://cloud.mongodb.com" class="underline" target="_blank">MongoDB Atlas</a></li>
+                    <li>Create a free account or sign in</li>
+                    <li>Create a new cluster (free tier available)</li>
+                    <li>Click "Connect" on your cluster</li>
+                    <li>Choose "Connect your application"</li>
+                    <li>Copy the connection string</li>
+                    <li>Replace <span class="bg-blue-100 px-1 rounded">&lt;password&gt;</span> with your database password</li>
+                </ol>
+                <div class="mt-2 bg-blue-100 p-3 rounded-lg">
+                    <p class="text-sm text-blue-700">Example URI format:</p>
+                    <code class="text-xs text-blue-800 block mt-1">
+                        mongodb+srv://username:password@cluster.xxxxx.mongodb.net/database?retryWrites=true&w=majority
+                    </code>
+                </div>
+            </div>
+
+            <!-- Gemini API Key -->
+            <div>
+                <p class="text-blue-700 font-medium">Gemini API Key:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Visit <a href="https://makersuite.google.com/app/apikey" class="underline" target="_blank">Google AI Studio</a></li>
+                    <li>Sign in with your Google account</li>
+                    <li>Click "Create API key" button</li>
+                    <li>Copy your new API key</li>
+                </ol>
+                <p class="text-xs text-blue-600 mt-1 ml-2">Note: Keep your API key secure and never share it publicly</p>
+            </div>
+
+            <!-- HuggingFace API Key -->
+            <div>
+                <p class="text-blue-700 font-medium">HuggingFace API Key:</p>
+                <ol class="list-decimal list-inside text-blue-600 ml-2">
+                    <li>Go to <a href="https://huggingface.co/settings/tokens" class="underline" target="_blank">HuggingFace Tokens</a></li>
+                    <li>Sign in to your account (create one if needed)</li>
+                    <li>Click "New token" button</li>
+                    <li>Give your token a name and select permissions</li>
+                    <li>Copy your new token (starts with 'hf_')</li>
+                </ol>
+                <p class="text-xs text-blue-600 mt-1 ml-2">Note: Save your token immediately as it won't be shown again</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- API Keys Form -->
+  <div id="setupForm" class="space-y-6">
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">MongoDB URI</label>
+          <input 
+              type="password" 
+              id="mongoUri"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter MongoDB URI"
+              onblur="validateMongoUri()"
+          />
+          <span id="mongoUriError" class="text-xs text-red-500 mt-1 block"></span>
+          <p class="mt-1 text-xs text-slate-500">Format: mongodb://username:password@host:port/database</p>
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">Gemini API Key</label>
+          <input 
+              type="password" 
+              id="geminiKey"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter Gemini API Key"
+              onblur="validateGeminiKey()"
+          />
+          <span id="geminiKeyError" class="text-xs text-red-500 mt-1 block"></span>
+      </div>
+
+      <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">HuggingFace API Key</label>
+          <input 
+              type="password" 
+              id="huggingfaceKey"
+              class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter HuggingFace API Key"
+              onblur="validateHuggingFaceKey()"
+          />
+          <span id="huggingfaceKeyError" class="text-xs text-red-500 mt-1 block"></span>
+      </div>
+
+      <button 
+          onclick="saveConfig()"
+          id="saveButton"
+          class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 disabled:bg-slate-300 disabled:cursor-not-allowed"
+          disabled
+      >
+          Save Configuration
+      </button>
+      <div id="setupStatus" class="text-sm text-center"></div>
+  </div>
+</section>
+      
+     
+        <!-- Footer -->
+        <footer
+          class="text-center text-slate-600 py-8 border-t border-slate-200"
+        >
+          <p>
+            © 2025 CreativeNexus AI . Created by
+            <span class="font-medium text-slate-800">Gaurav Kumar Chaurasiya</span> &
+            <span class="font-medium text-slate-800">Arnav Jain</span>
+          </p>
+        </footer>
+      </div>
+    </main>
+
+    <div
+    id="robot-helper"
+    class="fixed bottom-6 right-6 z-50 flex flex-col items-center animate-fade-in cursor-pointer"
+  >
+    <div
+      class="bg-white text-gray-800 px-3 py-1.5 rounded-lg shadow text-sm font-medium mb-2 relative"
+    >
+      Need help? Click me!
+      <div
+        class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 shadow"
+      ></div>
+    </div>
+    <img
+      id="chat-button"
+      src="/static/robot.png"
+      alt="Chatbot"
+      class="w-24 h-auto hover:scale-105 transition-transform duration-300"
+    />
+  </div>
+    <!-- Chat Container -->
     <div
       id="chat-container"
-      class="chat-container hidden fixed bottom-24 right-6 w-[360px] sm:w-[400px] h-[420px] bg-white rounded-lg shadow-2xl overflow-hidden z-50"
+      class="chat-container fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl overflow-hidden z-50 hidden"
     >
+      <!-- Chat Header -->
       <div
-        class="bg-blue-600 text-white px-4 py-2 flex justify-between items-center"
+        class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center"
       >
-        <h3 class="font-medium text-sm">AI Assistant</h3>
-        <button
-          id="close-chat"
-          class="focus:outline-none text-black hover:text-gray-200 text-sm"
-        >
-          ✕
+        <h3 class="font-medium">Chat with Your Code</h3>
+        <button id="close-chat" class="focus:outline-none">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
         </button>
       </div>
-      <div
-        id="chat-messages"
-        class="p-3 h-[calc(100%-120px)] overflow-y-auto bg-gray-50 space-y-2 text-sm"
-      ></div>
-      <div class="border-t border-gray-200 p-3 bg-white">
-        <div class="flex items-center gap-2">
+
+      <!-- Chat Messages -->
+      <div id="chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
+        <div class="flex items-start mb-4">
+          <div
+            class="bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message"
+          >
+            Hi! I'm your code assistant. Ask me anything about the repository.
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input -->
+      <div class="border-t border-gray-200 p-4 bg-white">
+        <div class="flex items-center">
           <input
             id="user-input"
             type="text"
-            placeholder="Ask something..."
-            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ask about the code..."
+            class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled
           />
           <button
             id="send-button"
-            class="bg-blue-600 text-white rounded-md px-3 py-2 text-sm hover:bg-blue-700 focus:outline-none disabled:opacity-50"
+            class="ml-2 bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 focus:outline-none disabled:opacity-50"
             disabled
           >
-            ➤
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+              />
+            </svg>
           </button>
         </div>
         <div id="status-message" class="text-xs text-gray-500 mt-2"></div>
       </div>
     </div>
+<!-- Sounds -->
+<audio id="click-sound" src="/static/click.mp3" preload="auto"></audio>
+<audio
+  id="typing-sound"
+  src="/static/typing.mp3"
+  preload="auto"
+  loop
+></audio>
+<audio id="bot-sound" src="/static/bot.mp3" preload="auto"></audio>
 
-    <!-- Sounds -->
-    <audio id="click-sound" src="static/click.mp3" preload="auto"></audio>
-    <audio
-      id="typing-sound"
-      src="static/typing.mp3"
-      preload="auto"
-      loop
-    ></audio>
-    <audio id="bot-sound" src="static/bot.mp3" preload="auto"></audio>
-
-    <!-- Scripts -->
+    <!-- Sidebar + Feather Icons -->
     <script>
-      feather.replace();
-
-      // Load sidebar
-      fetch("sidebar.html")
+      fetch("/static/sidebar.html")
         .then((res) => res.text())
-        .then((html) => {
-          const sidebarContainer = document.getElementById("sidebar-container");
-          sidebarContainer.innerHTML = html;
-
-          const links = sidebarContainer.querySelectorAll("a");
-          links.forEach((link) => {
-            link.classList.remove(
-              "bg-blue-100",
-              "bg-blue-200",
-              "bg-blue-500",
-              "text-white",
-              "ring",
-              "ring-offset-2"
-            );
-            if (link.href === window.location.href) {
-              link.classList.add("font-bold", "text-blue-600");
-            }
-          });
+        .then((data) => {
+          document.getElementById("sidebar").innerHTML = data;
+          feather.replace();
         });
+
+      window.addEventListener("DOMContentLoaded", () => feather.replace());
+
+async function checkApiKeys() {
+  try {
+      const response = await fetch('/api/check-keys');
+      const data = await response.json();
+      
+      if (data.using_default_keys) {
+          document.getElementById('defaultKeysWarning').classList.remove('hidden');
+      }
+  } catch (error) {
+      console.error('Error checking API keys:', error);
+  }
+}
+
+function showSetupForm() {
+  // Show your API setup form
+  document.getElementById('setupForm').classList.remove('hidden');
+  // Scroll to setup form
+  document.getElementById('setupForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Check API keys status when page loads
+document.addEventListener('DOMContentLoaded', checkApiKeys);
+
+      // Validation patterns
+      const patterns = {
+          mongoUri: /^mongodb(?:\+srv)?:\/\/[^\s]+$/,
+          geminiKey: /^[A-Za-z0-9-_]{39}$/, 
+          huggingfaceKey: /^hf_[A-Za-z0-9]{34}$/
+      };
+      
+      let validations = {
+          mongoUri: false,
+          geminiKey: false,
+          huggingfaceKey: false
+      };
+      
+      function updateSaveButton() {
+          const saveButton = document.getElementById('saveButton');
+          saveButton.disabled = !Object.values(validations).every(v => v);
+      }
+      
+      function validateMongoUri() {
+          const uri = document.getElementById('mongoUri').value.trim();
+          const errorSpan = document.getElementById('mongoUriError');
+          
+          if (!uri) {
+              errorSpan.textContent = 'MongoDB URI is required';
+              validations.mongoUri = false;
+          } else if (!patterns.mongoUri.test(uri)) {
+              errorSpan.textContent = 'Invalid MongoDB URI format';
+              validations.mongoUri = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.mongoUri = true;
+          }
+          updateSaveButton();
+      }
+      
+      function validateGeminiKey() {
+          const key = document.getElementById('geminiKey').value.trim();
+          const errorSpan = document.getElementById('geminiKeyError');
+          
+          if (!key) {
+              errorSpan.textContent = 'Gemini API key is required';
+              validations.geminiKey = false;
+          } else if (!patterns.geminiKey.test(key)) {
+              errorSpan.textContent = 'Invalid Gemini API key format';
+              validations.geminiKey = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.geminiKey = true;
+          }
+          updateSaveButton();
+      }
+      
+      function validateHuggingFaceKey() {
+          const key = document.getElementById('huggingfaceKey').value.trim();
+          const errorSpan = document.getElementById('huggingfaceKeyError');
+          
+          if (!key) {
+              errorSpan.textContent = 'HuggingFace API key is required';
+              validations.huggingfaceKey = false;
+          } else if (!patterns.huggingfaceKey.test(key)) {
+              errorSpan.textContent = 'Invalid HuggingFace API key format';
+              validations.huggingfaceKey = false;
+          } else {
+              errorSpan.textContent = '';
+              validations.huggingfaceKey = true;
+          }
+          updateSaveButton();
+      }
+      
+      async function saveConfig() {
+          const mongoUri = document.getElementById('mongoUri').value.trim();
+          const geminiKey = document.getElementById('geminiKey').value.trim();
+          const huggingfaceKey = document.getElementById('huggingfaceKey').value.trim();
+          const statusDiv = document.getElementById('setupStatus');
+          const saveButton = document.getElementById('saveButton');
+      
+          // Final validation check
+          if (!mongoUri || !geminiKey || !huggingfaceKey) {
+              showStatus('Please fill in all fields', 'text-red-500');
+              return;
+          }
+      
+          try {
+              saveButton.disabled = true;
+              saveButton.textContent = 'Saving...';
+      
+              const response = await fetch('/api/setup', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      mongo_uri: mongoUri,
+                      gemini_key: geminiKey,
+                      huggingface_key: huggingfaceKey
+                  })
+              });
+      
+              const data = await response.json();
+      
+              if (response.ok) {
+                  showStatus('Configuration saved successfully! Reloading...', 'text-green-500');
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 1500);
+              } else {
+                  throw new Error(data.detail || 'Failed to save configuration');
+              }
+          } catch (error) {
+              showStatus(error.message, 'text-red-500');
+              saveButton.disabled = false;
+              saveButton.textContent = 'Save Configuration';
+          }
+      }
+      
+      function showStatus(message, colorClass) {
+          const statusDiv = document.getElementById('setupStatus');
+          statusDiv.textContent = message;
+          statusDiv.className = `mt-2 text-sm ${colorClass} text-center`;
+      }
+      
+      // Add input event listeners
+      document.getElementById('mongoUri').addEventListener('input', validateMongoUri);
+      document.getElementById('geminiKey').addEventListener('input', validateGeminiKey);
+      document.getElementById('huggingfaceKey').addEventListener('input', validateHuggingFaceKey);
+
+</script>
+
+
     </script>
-    <script src="static/script.js"></script>
+    <script src="/static/script.js"></script>
   </body>
 </html>

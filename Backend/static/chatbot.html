@@ -1,46 +1,216 @@
- <!-- Chat Button -->
- <button id="chat-button" class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-blue-700 focus:outline-none z-50">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-    </svg>
+<!-- chatbot.html -->
+<!-- Chat Button -->
+<button id="chat-button" 
+    class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/50 z-50">
+    <div class="relative">
+        <!-- Message Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+        <!-- Notification Dot -->
+        <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
+    </div>
 </button>
 
 <!-- Chat Container -->
-<div id="chat-container" class="chat-container fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl overflow-hidden z-50 hidden">
+<div id="chat-container" 
+    class="chat-container fixed bottom-24 right-6 w-96 bg-white rounded-2xl shadow-2xl overflow-hidden z-50 hidden transform transition-all duration-300 scale-95 opacity-0">
     <!-- Chat Header -->
-    <div class="bg-blue-600 text-white px-4 py-3 flex justify-between items-center">
-        <h3 class="font-medium">Chat with Your Code</h3>
-        <button id="close-chat" class="focus:outline-none">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="font-semibold">Code Assistant</h3>
+                <div class="flex items-center text-xs text-white/80">
+                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                    Online
+                </div>
+            </div>
+        </div>
+        <button id="close-chat" 
+            class="hover:bg-white/10 p-2 rounded-full transition-colors duration-200 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <path fill-rule="evenodd" 
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" 
+                    clip-rule="evenodd" />
             </svg>
         </button>
     </div>
     
     <!-- Chat Messages -->
-    <div id="chat-messages" class="p-4 h-96 overflow-y-auto bg-gray-50">
-        <div class="flex items-start mb-4">
-            <div class="bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message">
-                Hi! I'm your code assistant. Ask me anything about the repository.
+    <div id="chat-messages" 
+        class="p-6 h-[400px] overflow-y-auto bg-slate-50 space-y-4 scroll-smooth">
+        <!-- Welcome Message -->
+        <div class="flex items-start space-x-4">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                    <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="bg-white rounded-2xl rounded-tl-none px-4 py-3 shadow-sm border border-slate-100">
+                    <p class="text-slate-700">Hi! I'm your code assistant. How can I help you today?</p>
+                </div>
+                <span class="text-xs text-slate-400 mt-1 block">Just now</span>
             </div>
         </div>
     </div>
     
     <!-- Chat Input -->
-    <div class="border-t border-gray-200 p-4 bg-white">
-        <div class="flex items-center">
-            <input id="user-input" type="text" 
-                placeholder="Ask about the code..." 
-                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled>
-            <button id="send-button" 
-                class="ml-2 bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 focus:outline-none disabled:opacity-50"
-                disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                </svg>
-            </button>
+    <div class="border-t border-slate-100">
+        <div class="p-4 bg-white">
+            <div class="flex items-center space-x-3">
+                <div class="flex-1 relative">
+                    <input id="user-input" type="text" 
+                        placeholder="Type your message..." 
+                        class="w-full px-4 py-3 bg-slate-50 rounded-xl pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500/40 border border-slate-200"
+                        disabled>
+                    <!-- Typing Indicator -->
+                    <div id="typing-indicator" class="hidden absolute right-4 top-1/2 -translate-y-1/2">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                        </div>
+                    </div>
+                </div>
+                <button id="send-button" 
+                    class="bg-blue-600 text-white rounded-xl px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
+                    disabled>
+                    <span>Send</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+            </div>
+            <div id="status-message" class="text-xs text-slate-500 mt-2 ml-1"></div>
         </div>
-        <div id="status-message" class="text-xs text-gray-500 mt-2"></div>
     </div>
 </div>
+
+<style>
+    .chat-container {
+        transform-origin: bottom right;
+    }
+    
+    .chat-container.show {
+        transform: scale(1);
+        opacity: 1;
+    }
+    
+    /* Custom Scrollbar */
+    #chat-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 3px;
+    }
+    
+    #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #94A3B8;
+    }
+
+    /* Message Animation */
+    @keyframes messageIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-animation {
+        animation: messageIn 0.3s ease-out forwards;
+    }
+</style>
+
+<script>
+// Add this to your existing script.js or include it here
+document.addEventListener('DOMContentLoaded', function() {
+    const chatButton = document.getElementById('chat-button');
+    const chatContainer = document.getElementById('chat-container');
+    const closeChat = document.getElementById('close-chat');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const chatMessages = document.getElementById('chat-messages');
+
+    // Toggle chat
+    chatButton.addEventListener('click', () => {
+        chatContainer.classList.toggle('hidden');
+        setTimeout(() => {
+            chatContainer.classList.toggle('show');
+        }, 50);
+    });
+
+    // Close chat
+    closeChat.addEventListener('click', () => {
+        chatContainer.classList.remove('show');
+        setTimeout(() => {
+            chatContainer.classList.add('hidden');
+        }, 300);
+    });
+
+    // Add new message
+    function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex items-start space-x-4 message-animation ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+        
+        const avatar = isUser ? 
+            `<div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-white text-sm font-semibold">U</span>
+            </div>` :
+            `<div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+            </div>`;
+
+        messageDiv.innerHTML = `
+            ${avatar}
+            <div class="flex-1">
+                <div class="bg-white rounded-2xl ${isUser ? 'rounded-tr-none bg-blue-600 text-white' : 'rounded-tl-none'} px-4 py-3 shadow-sm border ${isUser ? 'border-blue-600' : 'border-slate-100'}">
+                    <p>${message}</p>
+                </div>
+                <span class="text-xs text-slate-400 mt-1 block ${isUser ? 'text-right' : ''}">Just now</span>
+            </div>
+        `;
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Handle send message
+    sendButton.addEventListener('click', () => {
+        const message = userInput.value.trim();
+        if (message) {
+            addMessage(message, true);
+            userInput.value = '';
+            // Add your message handling logic here
+        }
+    });
+
+    // Handle enter key
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendButton.click();
+        }
+    });
+});
+</script>

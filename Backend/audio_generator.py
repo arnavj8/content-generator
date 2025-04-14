@@ -8,14 +8,27 @@ from gtts import gTTS
 from pydub import AudioSegment
 import logging
 from Backend.logger import logging
+from Backend.db_utils import DatabaseManager,get_api_keys
 
-# Load environment variables
-load_dotenv()
 
-# Get the API key for Hugging Face
-HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+try:
+    keys = get_api_keys()
+    
+    # load_dotenv()   
+    # Use the keys
+    HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+except Exception as e:
+    logging.error(f"Failed to initialize API keys: {str(e)}")
+    
+    
+# # Load environment variables
+
+# # Get the API key for Hugging Face
+# HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+# API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+# headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 def extract_start_time(timestamp):
     """Extracts the start time in seconds from a timestamp string (e.g., '00:10 - 00:20')."""
@@ -62,8 +75,28 @@ def generate_images_from_script(script_json, output_dir):
 
     logging.info("All images generated successfully.")
 
-def generate_audio(script_json, output_dir, language='en', max_retries=3):
-    """Generate audio from the voiceover text in the script JSON and save as mp3 files."""
+def generate_british_female_voice(text, output_path, max_retries=3):
+    """Generate British female professional voice audio."""
+    for attempt in range(max_retries):
+        try:
+            tts = gTTS(text=text, lang='en', tld='co.uk', slow=False)
+            tts.save(output_path)
+            audio_clip = AudioSegment.from_file(output_path)
+            
+            # Adjust audio properties for more professional sound
+            audio_clip = audio_clip + 2  # Slightly increase volume
+            audio_clip.export(output_path, format="mp3")
+            
+            return audio_clip
+            
+        except Exception as e:
+            if attempt < max_retries - 1:
+                time.sleep(5)
+            else:
+                raise e
+
+def generate_audio(script_json, output_dir, max_retries=3):
+    """Generate audio from the voiceover text in the script JSON using British female professional voice."""
     output_dir.mkdir(parents=True, exist_ok=True)
     logging.info(f"Output directory for audio created at {output_dir}")
 
@@ -78,22 +111,44 @@ def generate_audio(script_json, output_dir, language='en', max_retries=3):
             logging.warning(f"Skipping scene {i+1}: No voiceover text provided.")
             continue
 
-        for attempt in range(max_retries):
-            try:
-                logging.info(f"Generating audio for scene {i+1}, attempt {attempt + 1}")
-                tts = gTTS(voiceover_text, lang=language)
-                tts.save(output_path)
+        try:
+            logging.info(f"Generating British female professional voice for scene {i+1}")
+            
+            # Process the voiceover text for better speech
+            processed_text = voiceover_text.replace('-', ' ').replace('_', ' ')
+            
+            # Generate the British female voice
+            audio_clip = generate_british_female_voice(
+                processed_text, 
+                output_path, 
+                max_retries
+            )
+            
+            logging.info(f"Audio saved: {output_path} | Duration: {len(audio_clip) / 1000:.2f}s")
 
-                audio_clip = AudioSegment.from_file(output_path)
-                logging.info(f"Audio saved: {output_path} | Duration: {len(audio_clip) / 1000:.2f}s")
-                break
-
-            except Exception as e:
-                if attempt < max_retries - 1:
-                    logging.warning(f"Failed to generate audio for scene {i+1}. Retrying... ({attempt + 1}/{max_retries})")
-                    time.sleep(5)
-                else:
-                    logging.error(f"Failed after {max_retries} attempts for scene {i+1}: {e}")
-                    raise
+        except Exception as e:
+            logging.error(f"Failed to generate audio for scene {i+1}: {e}")
+            raise
 
     logging.info("All audio generation tasks completed.")
+
+def process_script_with_voice_options(script_json, output_dir):
+    """Process script with additional voice options and configurations."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Voice configuration options
+    voice_configs = {
+        'professional': {
+            'slow': False,
+            'tld': 'co.uk',
+        },
+        'formal': {
+            'slow': True,
+            'tld': 'co.uk',
+        },
+        'standard': {
+            'slow': False,
+            'tld': 'com',
+        }
+    }
+    

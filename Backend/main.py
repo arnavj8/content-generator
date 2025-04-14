@@ -5,7 +5,7 @@ import uvicorn
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Form
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from Backend.meme import generate_meme_content, add_meme_text, generate_meme_image
@@ -18,6 +18,8 @@ from Backend.music_generator import generate_music, generate_music_prompt
 from Backend.video_generator import create_final_video
 from Backend.logger import logging  
 from Backend.chatbot import KnowledgeBase
+from Backend.db_utils import DatabaseManager
+
 
 # FastAPI setup
 app = FastAPI()
@@ -54,6 +56,29 @@ class VideoRequest(BaseModel):
 class ChatRequest(BaseModel):
     query: str
 
+class SetupConfig(BaseModel):
+    mongo_uri: str
+    gemini_key: str
+    huggingface_key: str
+
+    @validator('mongo_uri')
+    def validate_mongo_uri(cls, v):
+        if not v.startswith('mongodb'):
+            raise ValueError('Invalid MongoDB URI')
+        return v
+
+    @validator('gemini_key')
+    def validate_gemini_key(cls, v):
+        if not len(v) == 39:  
+            raise ValueError('Invalid Gemini API key')
+        return v
+
+    @validator('huggingface_key')
+    def validate_huggingface_key(cls, v):
+        if not len(v) == 37: 
+            raise ValueError('Invalid HuggingFace API key')
+        return v
+    
 kb = KnowledgeBase()
 
 @app.get("/", response_class=FileResponse)
@@ -178,33 +203,6 @@ async def generate_video(request: VideoRequest):
         logging.error(f"Error generating video: {e}")
         return {"error": str(e)}
 
-
-# @app.get("/", response_class=HTMLResponse)
-# async def get_index():
-#     with open("static/index.html", "r") as f:
-#         return HTMLResponse(content=f.read(), status_code=200)
-
-# @app.post("/api/initialize")
-# async def initialize_kb():
-#     try:
-#         success = kb.initialize()
-#         if success:
-#             logging.info("Knowledge base initialized successfully")
-#             return JSONResponse(content={"success": True, "message": "Knowledge base initialized successfully"})
-#         else:
-#             logging.error("Failed to initialize knowledge base")
-#             return JSONResponse(content={"success": False, "message": "Failed to initialize knowledge base"}, status_code=500)
-#     except Exception as e:
-#         logging.error(f"Error initializing knowledge base: {str(e)}")
-#         return JSONResponse(content={"success": False, "message": str(e)}, status_code=500)
-
-# @app.get("/api/status")
-# async def get_status():
-#     if kb.initialized:
-#         return JSONResponse(content={"status": "complete", "initialized": True})
-#     else:
-#         return JSONResponse(content={"status": "not_started", "initialized": False})
-
 @app.post("/api/initialize")
 async def initialize_kb():
     try:
@@ -252,6 +250,36 @@ async def shutdown_event():
     if hasattr(kb, 'cleanup'):
         kb.cleanup()
 
+@app.post("/api/setup")
+async def setup_config(config: SetupConfig):
+    logging.info("Received setup configuration request")
+    
+    try:
+        db = DatabaseManager.get_instance()
+        
+        # Initialize DB connection
+        if not db.initialize(config.mongo_uri):
+            logging.error("Failed to initialize database connection")
+            raise HTTPException(status_code=500, detail="Failed to connect to database")
+        
+        # Save API keys
+        if not db.save_keys(config.gemini_key, config.huggingface_key):
+            logging.error("Failed to save API keys")
+            raise HTTPException(status_code=500, detail="Failed to save API keys")
+        
+        logging.info("Successfully saved configuration")
+        return {"status": "success", "message": "Configuration saved successfully"}
+    
+    except Exception as e:
+        logging.error(f"Error in setup: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/check-keys")
+async def check_keys():
+    db = DatabaseManager.get_instance()
+    return {
+        "using_default_keys": db.is_using_default_keys()
+    }
 if __name__ == "__main__":
     if not os.path.exists("static"):
         os.makedirs("static")

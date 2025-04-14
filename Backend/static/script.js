@@ -1,17 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const chatButton = document.getElementById("chat-button");
-  const chatContainer = document.getElementById("chat-container");
-  const closeChat = document.getElementById("close-chat");
-  const userInput = document.getElementById("user-input");
-  const sendButton = document.getElementById("send-button");
-  const chatMessages = document.getElementById("chat-messages");
-  const statusMessage = document.getElementById("status-message");
-
-  const clickSound = document.getElementById("click-sound");
-  const typingSound = document.getElementById("typing-sound");
-  const botSound = document.getElementById("bot-sound");
-
-  initializeKnowledgeBase();
+document.addEventListener('DOMContentLoaded', () => {
+    const chatButton = document.getElementById('chat-button');
+    const chatContainer = document.getElementById('chat-container');
+    const closeChat = document.getElementById('close-chat');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const chatMessages = document.getElementById('chat-messages');
+    const statusMessage = document.getElementById('status-message');
+    // const statusDisplay = document.getElementById('status-display');
+    // const chatButton = document.getElementById("chat-button");
+    const clickSound = document.getElementById("click-sound");
+    const typingSound = document.getElementById("typing-sound");
+    const botSound = document.getElementById("bot-sound");
+    clickSound.volume = 0.7;
+    typingSound.volume = 0.1;
+    // botSound.volume = 0.3;
+    initializeKnowledgeBase();
 
   let checkStatusInterval;
   let statusCheckInProgress = false;
@@ -109,38 +112,63 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  checkStatus();
+    // Start status checking
+    checkStatus();
+    
+    // Toggle chat visibility
+    chatButton.addEventListener('click', () => {
+        chatContainer.classList.toggle('hidden');
+        if (!chatContainer.classList.contains('hidden')) {
+            userInput.focus();
+        }
+        clickSound.currentTime = 0; // rewind to start
+        clickSound.play().catch((err) => {
+        console.error("Sound play failed:", err);
+        if (botSound) {
+              botSound.currentTime = 0;
+              botSound.play();
+            }
+        });
+        
 
-  chatButton.addEventListener("click", () => {
-    chatContainer.classList.toggle("hidden");
-    playClick();
-    if (!chatContainer.classList.contains("hidden")) {
-      userInput.focus();
+    });
+    
+    closeChat.addEventListener('click', () => {
+        if (clickSound) {
+                  clickSound.currentTime = 0;
+                  clickSound.play();
+                }
+        
+                if (typingSound) {
+                  typingSound.pause();
+                  typingSound.currentTime = 0;
+                }
+        chatContainer.classList.add('hidden');
+
+    });
+    function playTyping() {
+        if (typingSound) {
+          typingSound.currentTime = 0;
+          typingSound.play().catch((e) => console.warn("Typing sound failed:", e));
+        }
+      }
+    
+      function stopTyping() {
+        if (typingSound) {
+          typingSound.pause();
+          typingSound.currentTime = 0;
+   }
     }
-  });
-
-  closeChat.addEventListener("click", () => {
-    chatContainer.classList.add("hidden");
-    playClick();
-  });
-
-  function addMessageToChat(text, sender) {
-    const messageDiv = document.createElement("div");
-    messageDiv.className = `flex items-start mb-3 ${
-      sender === "user" ? "justify-end" : ""
-    }`;
-
-    const messageContent = text.replace(
-      /```([\s\S]*?)```/g,
-      "<pre><code>$1</code></pre>"
-    );
-
-    messageDiv.innerHTML = `
-            <div class="${
-              sender === "user"
-                ? "bg-blue-500 text-white"
-                : "bg-blue-100 text-gray-800"
-            } rounded-lg py-2 px-4 chat-message">
+    function addMessageToChat(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex items-start mb-4 ${sender === 'user' ? 'justify-end' : ''}`;
+        
+        const messageContent = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        
+        messageDiv.innerHTML = `
+            <div class="${sender === 'user' ? 
+                'bg-blue-500 text-white' : 
+                'bg-blue-100 text-gray-800'} rounded-lg py-2 px-4 chat-message">
                 ${messageContent}
             </div>
         `;
@@ -168,49 +196,102 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>.</span><span>.</span><span>.</span>
             </div>
         `;
-    typingDiv.id = "typing-indicator";
-    chatMessages.appendChild(typingDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+        typingDiv.id = 'typing-indicator';
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        playTyping();
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: message })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+            stopTyping()
+            
+            if (data.response) {
+                // playTyping()
+                addMessageToChat(data.response, 'bot');
+            } else {
+                addMessageToChat('Received empty response from server.', 'bot');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+            addMessageToChat('Sorry, there was an error processing your request: ' + error.message, 'bot');
+        })
+        .finally(() => {
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            userInput.focus();
+        });
+    }
+    
+    
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
 
-    playTyping();
-
-    fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: message }),
-    })
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        const indicator = document.getElementById("typing-indicator");
-        if (indicator) indicator.remove();
-        stopTyping();
-
-        if (data.response) {
-          addMessageToChat(data.response, "bot");
-        } else {
-          addMessageToChat("Received empty response from server.", "bot");
-        }
-      })
-      .catch((error) => {
-        const indicator = document.getElementById("typing-indicator");
-        if (indicator) indicator.remove();
-        stopTyping();
-        console.error("Error:", error);
-        addMessageToChat("Sorry, there was an error: " + error.message, "bot");
-      })
-      .finally(() => {
-        userInput.disabled = false;
-        sendButton.disabled = false;
-        userInput.focus();
-      });
-  }
-
-  sendButton.addEventListener("click", sendMessage);
-  userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
-  });
 });
+
+// Add this to your script.js
+const toggleSidebar = () => {
+    const sidebar = document.querySelector('aside');
+    sidebar.classList.toggle('-translate-x-full');
+}
+
+// Add a button for mobile menu toggle
+const addMobileMenuButton = () => {
+    const button = document.createElement('button');
+    button.className = 'lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 text-white';
+    button.innerHTML = `
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    `;
+    button.onclick = toggleSidebar;
+    document.body.appendChild(button);
+}
+
+// Initialize mobile menu
+if (window.innerWidth < 1024) {
+    addMobileMenuButton();
+}
+
+// ################### API KEYS HANDLGIN ###########################
+
+// Function to save API keys to localStorage
+function saveAPIKeys(geminiKey, huggingfaceKey) {
+    localStorage.setItem('geminiApiKey', geminiKey);
+    localStorage.setItem('huggingfaceApiKey', huggingfaceKey);
+}
+
+// Function to load API keys from localStorage
+function loadAPIKeys() {
+    const geminiKey = localStorage.getItem('geminiApiKey') || '';
+    const huggingfaceKey = localStorage.getItem('huggingfaceApiKey') || '';
+    
+    // Set the input values
+    document.getElementById('geminiApiKey').value = geminiKey;
+    document.getElementById('huggingfaceApiKey').value = huggingfaceKey;
+}
+
+// Function to handle API key changes
+function handleAPIKeyChange() {
+    const geminiInput = document.getElementById('geminiApiKey');
+    const huggingfaceInput = document.getElementById('huggingfaceApiKey');
+    
+    saveAPIKeys(geminiInput.value, huggingfaceInput.value);
+}

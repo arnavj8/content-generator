@@ -5,12 +5,25 @@ import re
 import json
 import logging
 from Backend.logger import logging
+from Backend.db_utils import ensure_api_keys
 
-# Load environment variables
-load_dotenv()
+try:
+    # Ensure API keys are available
+    ensure_api_keys()
+    
+    # Use the keys
+    # HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    GEN_API_KEY = os.getenv('GEN_API_KEY')
+    
+    # Your code here...
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
+# # Load environment variables
+# load_dotenv()
 
-# Get the API key for Google Generative AI
-GEN_API_KEY = os.getenv('GEN_API_KEY')
+# # Get the API key for Google Generative AI
+# GEN_API_KEY = os.getenv('GEN_API_KEY')
 
 if not GEN_API_KEY:
     logging.error("GEN_API_KEY not found in environment variables.")
@@ -41,7 +54,7 @@ def generate_video_script(topic, style):
        - **Character & Object Details:** (To ensure consistency in generated images)
        - **Shot Type & Camera Angle:** (e.g., Wide shot, Close-up, Aerial view)
        - **Mood & Emotion:** (To determine music and voiceover tone)
-       - **Suggested Transition Effect:** (Fade-in, Crossfade, Zoom, etc.)
+       - **Suggested Transition Effect:** (quick cuts,fade-in,zoom out and crossfade only)
     4. **Provide a final summary of the entire video mood** (e.g., inspirational, dramatic, educational).
     5. **Generate a background music prompt** based on the overall video theme and mood.
     6. **Ensure clarity, consistency, and coherence** in the storytelling.

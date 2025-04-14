@@ -5,12 +5,24 @@ from pathlib import Path
 import re
 import logging
 from Backend.logger import logging
-# Load environment variables
-load_dotenv()
+from Backend.db_utils import ensure_api_keys
+
+try:
+    # Ensure API keys are available
+    ensure_api_keys()
+    
+    # Use the keys
+    HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    # GEN_API_KEY = os.getenv('GEN_API_KEY')
+    
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
 
 
-# Get the API key for Hugging Face
-HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+
+# # Get the API key for Hugging Face
+# HF_API_TOKEN = os.getenv('HF_API_TOKEN')
 API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 

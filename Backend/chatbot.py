@@ -1,103 +1,3 @@
-# import os
-# import tempfile
-# import shutil
-# from pathlib import Path
-# import threading
-# import requests
-# import zipfile
-# import io
-# import numpy as np
-# import faiss
-# import google.generativeai as genai
-# from langchain_text_splitters import RecursiveCharacterTextSplitter
-# from langchain_google_genai import GoogleGenerativeAIEmbeddings
-# import logging
-# from Backend.logger import logging
-# from dotenv import load_dotenv
-# load_dotenv()
-# GEMINI_API_KEY = os.getenv("GEN_API_KEY")
-# GITHUB_REPO_URL = os.getenv("GITHUB_REPO_URL")
-# if not GEMINI_API_KEY or not GITHUB_REPO_URL:
-#     raise ValueError("Required environment variables are not set")
-
-# class KnowledgeBase:
-#     def __init__(self):
-#         self.initialized = False
-#         self.repo_path = None
-#         self.embeddings = None
-#         self.index = None
-#         self.metadata = []
-#         self._initialization_lock = threading.Lock()
-#         self._initialization_in_progress = False
-            
-#     def initialize(self):
-#         """Initialize the knowledge base"""
-#         temp_dir = None
-        
-#         # Check if already initialized or initialization in progress
-#         with self._initialization_lock:
-#             if self.initialized:
-#                 logging.info("Knowledge base already initialized")
-#                 return True
-            
-#             if self._initialization_in_progress:
-#                 logging.info("Initialization already in progress")
-#                 return False
-            
-#             self._initialization_in_progress = True
-        
-#         try:
-#             logging.info("Starting initialization...")
-            
-#             # Validate environment variables
-#             if not GITHUB_REPO_URL:
-#                 raise ValueError("GITHUB_REPO_URL not set in environment variables")
-#             if not GEMINI_API_KEY:
-#                 raise ValueError("GEMINI_API_KEY not set in environment variables")
-            
-#             # Configure Gemini
-#             genai.configure(api_key=GEMINI_API_KEY)
-
-#             # Set up embeddings
-#             self.embeddings = GoogleGenerativeAIEmbeddings(
-#                 model="models/embedding-001",
-#                 google_api_key=GEMINI_API_KEY
-#             )
-
-#             # Create temp directory for repo
-#             temp_dir = tempfile.mkdtemp()
-#             self.repo_path = os.path.join(temp_dir, "repo")
-#             os.makedirs(self.repo_path, exist_ok=True)
-
-#             # Download repository
-#             self._download_repo()
-
-#             # Process files
-#             self._process_files()
-
-#             # Mark as initialized
-#             with self._initialization_lock:
-#                 self.initialized = True
-#                 self._initialization_in_progress = False
-            
-#             logging.info("Initialization complete!")
-#             return True
-        
-#         except Exception as e:
-#             logging.error(f"Initialization failed: {str(e)}")
-            
-#             # Cleanup temp directory if it exists
-#             if temp_dir and os.path.exists(temp_dir):
-#                 shutil.rmtree(temp_dir)
-            
-#             # Reset initialization state
-#             with self._initialization_lock:
-#                 self.initialized = False
-#                 self._initialization_in_progress = False
-            
-#             return False
-
-
 import os
 import tempfile
 import shutil
@@ -114,9 +14,21 @@ import logging
 import threading
 from Backend.logger import logging
 from dotenv import load_dotenv
+from Backend.db_utils import ensure_api_keys
+try:
+    # Ensure API keys are available
+    ensure_api_keys()
+    
+    # Use the keys
+    # HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    GEMINI_API_KEY = os.getenv('GEN_API_KEY')
+    
 
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GEN_API_KEY")
+# GEMINI_API_KEY = os.getenv("GEN_API_KEY")
 GITHUB_REPO_URL = os.getenv("GITHUB_REPO_URL")
 
 class KnowledgeBase:
@@ -315,7 +227,7 @@ class KnowledgeBase:
 
                 1. Greeting Handling:
                 - If the user sends a greeting (hello, hi, hey), respond warmly and offer assistance
-                - Mention that you're an AI assistant for the project's code repository
+                - Mention that you're an AI assistant for the project's code repository only on greetings
 
                 2. Question Answering:
                 - Use ONLY the provided context to formulate your responses
