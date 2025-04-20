@@ -15,7 +15,7 @@
 ---
 ## 🔁 Flow Overview
 
-![CreativeNexusAI Flowchart](https://github.com/gauravkumarchaurasiya/content-generator/Images/flowchart.png)
+![CreativeNexusAI Flowchart](https://github.com/gauravkumarchaurasiya/content-generator/blob/main/Images/flowchart.png)
 
 ---
 ## 🧩 How It Works
