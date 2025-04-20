@@ -204,8 +204,8 @@ CreativeNexusAI/
 │   │   │   └── script.js
 │   │   └── blogs/
 │   │
-│   ├── templates/                       # Jinja2 HTML templates
-│   │   ├── sidebar.html                 # Moved here directly
+│   ├── templates/                      
+│   │   ├── sidebar.html                
 │   │   ├── home.html
 │   │   ├── chat.html
 │   │   ├── chatbot.html
@@ -234,11 +234,6 @@ CreativeNexusAI/
 
 ---
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
 
 ## 🤝 Contributing
 
