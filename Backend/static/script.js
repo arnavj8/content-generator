@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('send-button');
     const chatMessages = document.getElementById('chat-messages');
     const statusMessage = document.getElementById('status-message');
-    // const statusDisplay = document.getElementById('status-display');
-    // const chatButton = document.getElementById("chat-button");
     const clickSound = document.getElementById("click-sound");
     const typingSound = document.getElementById("typing-sound");
     const botSound = document.getElementById("bot-sound");
@@ -19,10 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let checkStatusInterval;
     let statusCheckInProgress = false;
 
-    // function updateStatus(message, isError = false) {
-    //     statusDisplay.textContent = message;
-    //     statusDisplay.className = `text-${isError ? 'red' : 'gray'}-600`;
-    // }
 
     function checkStatus() {
         if (statusCheckInProgress) return;
@@ -53,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `;
                         chatMessages.appendChild(welcomeMessage);
+                        
                     }
                 } else if (data.status === 'failed') {
                     // updateStatus(`Initialization failed: ${data.message}`, true);

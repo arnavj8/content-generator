@@ -190,7 +190,7 @@ class KnowledgeBase:
 
         ignored_extensions = {
             '.exe', '.bin', '.jpg', '.jpeg', '.png', '.gif', '.mp4',
-            '.mp3', '.zip', '.tar', '.gz', '.pdf', '.pyc', '.ttf'
+            '.mp3', '.zip', '.tar', '.gz', '.pdf', '.pyc', '.ttf', '.html','.js',
         }
 
         if file_path.suffix.lower() in ignored_extensions:
@@ -221,8 +221,8 @@ class KnowledgeBase:
             # Generate response with Gemini
             model = genai.GenerativeModel('gemini-1.5-pro')
 
-            prompt = f"""You are a helpful AI assistant specifically designed for this project's RAG (Retrieval Augmented Generation) chatbot. Your primary goal is to provide accurate and helpful information about the project based on the available context. 
-            
+            prompt = f"""You are a specialized AI assistant focused on explaining this specific codebase and project. Your primary role is to provide accurate, technical, and helpful information about the project's implementation, architecture, and functionality.
+
                 Guidelines for responding:
 
                 1. Greeting Handling:
