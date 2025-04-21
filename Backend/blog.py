@@ -214,6 +214,7 @@ def clean_json_string(json_string):
     return cleaned_string
 
 def save_json_to_file(json_string, filename="corrected_blog.json"):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     corrected_json_str = clean_json_string(json_string)
     try:
         data = json.loads(corrected_json_str)
