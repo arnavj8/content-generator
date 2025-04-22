@@ -11,6 +11,16 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      .notification {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
     </style>
   </head>
 
@@ -123,6 +133,8 @@
                   />
                 </svg>
               </button>
+              <div id="notificationsContainer" class="m-4 space-y-2"></div> 
+              
             </div>
           </form>
         </div>
@@ -182,12 +194,16 @@
           const style = document.getElementById("videoStyle").value.trim();
 
           if (!topic) {
-            alert("Please enter a topic.");
+            notifications.show("Please enter a video topic", "error")
             return;
           }
+          if (!style) {
+                notifications.show("Please specify a video style", "error");
+                return;
+            }
 
           loader.classList.remove("hidden");
-
+          notifications.show("Starting video generation process...", "info");
           try {
             // Send JSON to FastAPI
             const response = await fetch("/generate_video", {
@@ -200,7 +216,7 @@
 
             if (!response.ok) {
               const errorText = await response.text();
-              throw new Error("❌ Video generation failed: " + errorText);
+              throw new Error("Video generation failed: " + errorText);
             }
 
             const blob = await response.blob();
@@ -211,12 +227,16 @@
               style || "Default"
             }`;
             videoOutput.classList.remove("hidden");
+            notifications.show("Video generated successfully! 🎥", "success");
           } catch (error) {
-            alert(error.message);
+            notifications.show(
+                    error.message || "Failed to generate video. Please try again.",
+                    "error");
           } finally {
             loader.classList.add("hidden");
           }
         });
     </script>
+    <script src="/static/script.js"></script>
   </body>
 </html>

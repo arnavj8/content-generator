@@ -269,3 +269,70 @@ function handleAPIKeyChange() {
     
     saveAPIKeys(geminiInput.value, huggingfaceInput.value);
 }
+
+class NotificationManager {
+    constructor() {
+        this.createContainer();
+    }
+
+    createContainer() {
+        // Create container if it doesn't exist
+        if (!document.getElementById('notificationsContainer')) {
+            const container = document.createElement('div');
+            container.id = 'notificationsContainer';
+            container.className = 'm-4 space-y-2 fixed top-4 right-4 z-50';
+            document.body.appendChild(container);
+        }
+    }
+
+    show(message, type = 'info') {
+        const container = document.getElementById('notificationsContainer');
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification rounded-lg p-4 flex items-center gap-3 ${
+            type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 
+            type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 
+            'bg-blue-50 text-blue-700 border border-blue-200'
+        }`;
+        
+        // Create icon based on notification type
+        const icon = document.createElement('div');
+        icon.className = 'flex-shrink-0';
+        if (type === 'error') {
+            icon.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>`;
+        } else if (type === 'success') {
+            icon.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>`;
+        } else {
+            icon.innerHTML = `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1v-3a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>`;
+        }
+        
+        // Create message element
+        const messageEl = document.createElement('div');
+        messageEl.textContent = message;
+        messageEl.className = 'flex-1 text-sm font-medium';
+        
+        // Append elements
+        notification.appendChild(icon);
+        notification.appendChild(messageEl);
+        container.appendChild(notification);
+        
+        // Animation
+        setTimeout(() => notification.classList.add('show'), 10);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+}
+
+// Create global instance
+window.notifications = new NotificationManager();

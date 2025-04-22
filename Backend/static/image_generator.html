@@ -11,6 +11,16 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      .notification {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
     </style>
   </head>
 
@@ -114,7 +124,8 @@
                   />
                 </svg>
               </button>
-
+              <div id="notificationsContainer" class="m-4 space-y-2"></div> 
+              
               <!-- Loader -->
               <div id="loader" class="hidden items-center gap-3 mt-4">
                 <div
@@ -198,12 +209,12 @@
           const loader = document.getElementById("loader");
 
           if (!topic || !style) {
-            alert("Please fill in both topic and style fields.");
+            notifications.show("Please fill in both topic and style fields.", "error");
             return;
           }
 
           loader.classList.remove("hidden");
-
+          notifications.show("Starting image generation process...", "info");
           fetch("/generate-image", {
             method: "POST",
             headers: {
@@ -223,17 +234,19 @@
                 document
                   .getElementById("section8")
                   .scrollIntoView({ behavior: "smooth" });
+                  notifications.show("Image generated successfully!", "success");
               } else {
-                alert("Image could not be generated. Try again later.");
+                throw new Error('Image generation failed');
               }
               loader.classList.add("hidden");
             })
             .catch((err) => {
-              alert("Failed to generate image. Please check server logs.");
+              notifications.show(err.message || "Failed to generate image. Please try again.", "error");
               loader.classList.add("hidden");
               console.error(err);
             });
         });
     </script>
+    <script src="/static/script.js"></script>
   </body>
 </html>

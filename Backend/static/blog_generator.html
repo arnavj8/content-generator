@@ -18,6 +18,16 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
+      .notification {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
     </style>
   </head>
 
@@ -132,7 +142,7 @@
                   />
                 </svg>
               </button>
-
+              <div id="notificationsContainer" class="m-4 space-y-2"></div> 
               <!-- Loader -->
               <div id="loader" class="hidden items-center gap-3 mt-4">
                 <div
@@ -196,25 +206,29 @@
           const loader = document.getElementById("loader");
 
           if (!topic || !style || !length) {
-            alert("Please fill in all details");
+            notifications.show("Please fill in all details", "error");
             return;
           }
 
           try {
             loader.classList.remove("hidden");
+            notifications.show("Starting blog generation process...", "info");
 
             const response = await fetch("/generate_blog", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ topic, style, length }),
             });
-
+            
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
             const data = await response.text();
             const rawMarkdown = data;
 
             const parsedHTML = marked.parse(rawMarkdown.replace(/\\n/g, "\n")); // Replace literal \n with real newlines
             outputContainer.innerHTML = parsedHTML;
-
+            notifications.show("Blog generated successfully!", "success");
             // outputContainer.innerHTML = marked.parse(data);
 
             // // 👉 Inject Tailwind classes to Markdown elements
@@ -245,12 +259,12 @@
             section.classList.remove("hidden");
             section.scrollIntoView({ behavior: "smooth" });
           } catch (error) {
-            console.error("Error generating blog:", error);
-            alert("An error occurred while generating the blog.");
+            notifications.show("An error occurred while generating the blog.", "error");
           } finally {
             loader.classList.add("hidden");
           }
         });
     </script>
+    <script src="/static/script.js"></script>
   </body>
 </html>
