@@ -14,17 +14,13 @@ try:
     # Use the keys
     HF_API_TOKEN = os.getenv('HF_API_TOKEN')
     # GEN_API_KEY = os.getenv('GEN_API_KEY')
-    
+
+# HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
     
 except Exception as e:
     logging.error(f"Error: {str(e)}")
-
-
-
-# # Get the API key for Hugging Face
-# HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-API_URL_SD = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
 def extract_start_time(timestamp):
     """Extracts the start time in seconds from a timestamp string (e.g., '00:10 - 00:20')."""

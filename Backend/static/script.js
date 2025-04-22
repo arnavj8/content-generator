@@ -6,13 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const sendButton = document.getElementById("send-button");
   const chatMessages = document.getElementById("chat-messages");
   const statusMessage = document.getElementById("status-message");
-  // const statusDisplay = document.getElementById('status-display');
-  // const chatButton = document.getElementById("chat-button");
   const clickSound = document.getElementById("click-sound");
   const typingSound = document.getElementById("typing-sound");
   const botSound = document.getElementById("bot-sound");
   clickSound.volume = 0.7;
-  typingSound.volume = 0.05;
+  typingSound.volume = 0.1;
   // botSound.volume = 0.3;
   initializeKnowledgeBase();
 
@@ -31,51 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
         statusCheckInProgress = false;
 
         if (data.initialized) {
+          // updateStatus('Knowledge base ready');
           statusMessage.textContent = "";
           userInput.disabled = false;
           sendButton.disabled = false;
           clearInterval(checkStatusInterval);
 
           if (!document.querySelector(".welcome-message")) {
-            const welcomeWrapper = document.createElement("div");
-            welcomeWrapper.classList.add("welcome-message");
-
-            const botMessage = document.createElement("div");
-            botMessage.className = "flex items-start mb-4";
-
-            const chatBox = document.createElement("div");
-            chatBox.className =
-              "bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message";
-            botMessage.appendChild(chatBox);
-            welcomeWrapper.appendChild(botMessage);
-            chatMessages.appendChild(welcomeWrapper);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            const welcomeText = `Hello! I'm ready to help you with questions about the repository. What would you like to know?`;
-
-            let charIndex = 0;
-            playTyping(); // Start the typing sound
-
-            const typingInterval = setInterval(() => {
-              if (charIndex < welcomeText.length) {
-                const char = welcomeText[charIndex];
-                chatBox.innerHTML += char === "\n" ? "<br>" : char;
-                charIndex++;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-              } else {
-                clearInterval(typingInterval);
-                stopTyping(); // Stop the typing sound once done
-                playBotSound(); // Play bot sound at the end
-              }
-            }, 25); // Adjust typing speed here
+            const welcomeMessage = document.createElement("div");
+            welcomeMessage.classList.add("welcome-message");
+            welcomeMessage.innerHTML = `
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-100 text-gray-800 rounded-lg py-2 px-4 chat-message">
+                                    Hello! I'm ready to help you with questions about the repository. What would you like to know?
+                                </div>
+                            </div>
+                        `;
+            chatMessages.appendChild(welcomeMessage);
           }
-          
         } else if (data.status === "failed") {
+          // updateStatus(`Initialization failed: ${data.message}`, true);
           statusMessage.textContent = data.message;
           clearInterval(checkStatusInterval);
           userInput.disabled = true;
           sendButton.disabled = true;
         } else {
+          // updateStatus('Initializing knowledge base...');
           statusMessage.textContent =
             "Please wait while the system initializes...";
 
@@ -86,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("Error checking status:", error);
+        // updateStatus('Error checking status', true);
         statusCheckInProgress = false;
         clearInterval(checkStatusInterval);
       });
@@ -181,16 +161,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then((data) => {
+        playTyping();
         const indicator = document.getElementById("typing-indicator");
         if (indicator) indicator.remove();
 
         if (data.response) {
-          typeBotResponseCharacterByCharacter(data.response);
+          // playTyping()
+          addMessageToChat(data.response, "bot");
         } else {
-          typeBotResponseCharacterByCharacter(
-            "Received empty response from server."
-          );
+          addMessageToChat("Received empty response from server.", "bot");
         }
+        stopTyping();
       })
       .catch((error) => {
         console.error("Error:", error);

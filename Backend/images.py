@@ -10,17 +10,19 @@ from Backend.db_utils import ensure_api_keys
 
 try:
     ensure_api_keys()
-except Exception as e:
-    logging.error(f"Error ensuring API keys: {str(e)}")
+
     # Set default keys as last resort
 
-load_dotenv()
+# load_dotenv()
 # Use the environment variables
-HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-GEMINI_API_KEY = os.getenv('GEN_API_KEY')
+    HF_API_TOKEN = os.getenv('HF_API_TOKEN')
+    GEMINI_API_KEY = os.getenv('GEN_API_KEY')
+    
+    genai.configure(api_key=GEMINI_API_KEY)
+except Exception as e:
+    logging.error(f"Error ensuring API keys: {str(e)}")
 
 # Configure Gemini
-genai.configure(api_key=GEMINI_API_KEY)
 
 def generate_prompt_with_gemini(topic: str, style: str) -> str:
     """

@@ -24,7 +24,11 @@ from Backend.db_utils import DatabaseManager
 # FastAPI setup
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+BASE_DIR = Path(__file__).resolve().parent
+
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -84,7 +88,7 @@ kb = KnowledgeBase()
 @app.get("/", response_class=FileResponse)
 async def serve_home():
     logging.info("Home page served.")
-    return FileResponse("static/home.html")
+    return FileResponse(BASE_DIR/"static/home.html")
 
 @app.post("/generate_meme")
 async def generate_meme(request: MemeRequest):
@@ -97,14 +101,16 @@ async def generate_meme(request: MemeRequest):
         # meme_image_path = os.path.join("static", "generated_meme.png")
         current_time = str(int(time.time()))  # Get current time in seconds (integer)
         unique_filename = f"generated_meme_{current_time}.png"
-        meme_image_path = os.path.join("static", unique_filename)
+
+        meme_image_path = os.path.join("static/memes", unique_filename)
+        os.makedirs(os.path.dirname(meme_image_path), exist_ok=True)
         meme_image.save(meme_image_path)
 
         final_meme = add_meme_text(meme_image, meme_caption, text_color, text_position, language)
         final_meme.save(meme_image_path)
 
         logging.info("Meme successfully generated.")
-        return {"caption": meme_caption, "image_url": f"/static/{unique_filename}"}
+        return {"caption": meme_caption, "image_url": f"/static/memes/{unique_filename}"}
 
     except Exception as e:
         logging.error(f"Error generating meme: {e}")
@@ -280,6 +286,18 @@ async def check_keys():
     return {
         "using_default_keys": db.is_using_default_keys()
     }
+    
+@app.get("/api/keys-status")
+async def api_keys_status():
+    db = DatabaseManager.get_instance()
+    try:
+        keys = db.get_keys()
+        if not keys:
+            return {"configured": False, "message": "API keys not configured"}
+        return {"configured": True}
+    except Exception as e:
+        return {"configured": False, "message": str(e)}
+    
 if __name__ == "__main__":
     if not os.path.exists("static"):
         os.makedirs("static")

@@ -14,18 +14,16 @@ try:
     # Use the keys
     HF_API_TOKEN = os.getenv('HF_API_TOKEN')
     # GEN_API_KEY = os.getenv('GEN_API_KEY')
-    
-    # Your code here...
-    
-except Exception as e:
-    logging.error(f"Error: {str(e)}")
-# Load environment variables
+
 # load_dotenv()
 
 # # Hugging Face API Token
 # HF_API_TOKEN = os.getenv('HF_API_TOKEN')
-API_URL_MUSICGEN = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
-headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+    API_URL_MUSICGEN = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
+    headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+    
+except Exception as e:
+    logging.error(f"Error: {str(e)}")
 
 def generate_music_prompt(background_music_prompt, scenes, overall_video_mood):
     """Generate a music prompt based on scene moods and overall video theme."""
