@@ -136,6 +136,23 @@ document.addEventListener('DOMContentLoaded', () => {
           typingSound.currentTime = 0;
    }
     }
+    // function addMessageToChat(text, sender) {
+    //     const messageDiv = document.createElement('div');
+    //     messageDiv.className = `flex items-start mb-4 ${sender === 'user' ? 'justify-end' : ''}`;
+        
+    //     const messageContent = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        
+    //     messageDiv.innerHTML = `
+    //         <div class="${sender === 'user' ? 
+    //             'bg-blue-500 text-white' : 
+    //             'bg-blue-100 text-gray-800'} rounded-lg py-2 px-4 chat-message">
+    //             ${messageContent}
+    //         </div>
+    //     `;
+        
+    //     chatMessages.appendChild(messageDiv);
+    //     chatMessages.scrollTop = chatMessages.scrollHeight;
+    // }
     function addMessageToChat(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start mb-4 ${sender === 'user' ? 'justify-end' : ''}`;
@@ -146,12 +163,29 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="${sender === 'user' ? 
                 'bg-blue-500 text-white' : 
                 'bg-blue-100 text-gray-800'} rounded-lg py-2 px-4 chat-message">
-                ${messageContent}
+                ${sender === 'user' ? messageContent : '<span class="typing-text"></span>'}
             </div>
         `;
         
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+        if (sender === 'bot') {
+            const typingElement = messageDiv.querySelector('.typing-text');
+            let index = 0;
+            const speed = 10; 
+            
+            function typeWriter() {
+                if (index < messageContent.length) {
+                    typingElement.innerHTML += messageContent.charAt(index);
+                    index++;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            
+            typeWriter();
+        }
     }
     
     function sendMessage() {
@@ -186,11 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            playTyping();
             const indicator = document.getElementById('typing-indicator');
             if (indicator) indicator.remove();
             
             if (data.response) {
+                playTyping();
                 // playTyping()
                 addMessageToChat(data.response, 'bot');
             } else {

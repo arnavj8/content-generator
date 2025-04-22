@@ -138,6 +138,27 @@
     .message-animation {
         animation: messageIn 0.3s ease-out forwards;
     }
+    .typing-text {
+        display: inline-block;
+        min-height: 1.2em;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .typing-text::after {
+        content: '|';
+        animation: blink 1s infinite;
+        margin-left: 2px;
+    }
+
+    .typing-text.done::after {
+        content: '';
+        animation: none;
+    }
 </style>
 
 <script>
