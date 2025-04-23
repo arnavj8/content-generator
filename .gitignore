@@ -20,3 +20,4 @@ Backend/auth.py
 Backend/auth_routes.py
 Backend/static/login.html
 Backend/static/register.html
+Backend/static/memes/
