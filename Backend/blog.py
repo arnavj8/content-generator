@@ -116,7 +116,7 @@ def fetch_news_newsapi(query):
 def generate_blog_with_gemini(context, topic, style, length):
     try:
         genai.configure(api_key=GEN_API_KEY)
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel("gemini-1.5-flash-latest")
         logging.info(f"Generating blog with Gemini for topic: {topic}, style: {style}, length: {length}")
 
         # Correct prompt formatting with JSON escaping

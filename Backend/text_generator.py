@@ -83,7 +83,7 @@ def generate_video_script(topic, style):
 
     try:
         logging.info("Sending prompt to the generative AI model...")
-        model = genai.GenerativeModel("gemini-1.5-pro")  
+        model = genai.GenerativeModel("gemini-1.5-flash-latest")  
         response = model.generate_content(prompt)
         logging.info("Successfully received response from the AI model.")
         return response.text

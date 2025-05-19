@@ -34,7 +34,7 @@ def generate_prompt_with_gemini(topic: str, style: str) -> str:
     )
     try:
         logging.info(f"Generating prompt with Gemini for topic: '{topic}' and style: '{style}'")
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel("gemini-1.5-flash-latest")
         response = model.generate_content(prompt_input)
         prompt_text = response.text.strip()
         logging.info(f"Successfully generated prompt for topic: '{topic}'")

@@ -31,7 +31,7 @@ def generate_meme_content(prompt, emotion, language="english"):
     """Generate meme caption, image prompt, font style, text color, and position using Gemini API."""
     logging.info("Configuring Gemini API with the provided key.")
     genai.configure(api_key=GEN_API_KEY)
-    model = genai.GenerativeModel("gemini-1.5-pro")
+    model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
     lang_instruction = "in English" if language.lower() == "english" else "in Hindi"
 

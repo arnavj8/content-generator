@@ -219,7 +219,7 @@ class KnowledgeBase:
             ])
 
             # Generate response with Gemini
-            model = genai.GenerativeModel('gemini-1.5-pro')
+            model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
             prompt = f"""You are a specialized AI assistant focused on explaining this specific codebase and project. Your primary role is to provide accurate, technical, and helpful information about the project's implementation, architecture, and functionality.
 
